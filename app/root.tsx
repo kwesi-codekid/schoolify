@@ -26,15 +26,15 @@ export default function App() {
   const { message } = useLoaderData<typeof loader>();
   const { toast } = useToast();
   useEffect(() => {
-    // if (message) {
-    console.log("run toast");
+    if (message) {
+      console.log("run toast");
 
-    toast({
-      title: "message.title",
-      description: `${moment().format("dddd, MMMM D, YYYY [at] h:mm A")}`,
-      variant: false ? "destructive" : "default",
-    });
-    // }
+      toast({
+        title: "message.title",
+        description: `${moment().format("dddd, MMMM D, YYYY [at] h:mm A")}`,
+        variant: message.status === "error" ? "destructive" : "default",
+      });
+    }
   }, [message]);
 
   return (
