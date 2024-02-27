@@ -1,20 +1,11 @@
 import mongoose, { type Document, type Model, type Connection } from "mongoose";
-import ImageSchema from "~/models/Image";
 import ProductSchema from "~/models/Product";
 import EmployeeSchema from "~/models/Employee";
-import CategorySchema from "~/models/Category";
 import AdminSchema from "~/models/Admin";
-import CartSchema from "~/models/Cart";
-import GuestCartSchema from "~/models/GuestCart";
 import StudentSchema from "~/models/User";
-import StockHistorySchema from "~/models/StockHistory";
-import OrderSchema from "~/models/Order";
-import ShippingTimelineSchema from "~/models/ShippingTimeline";
 import EmailHistorySchema from "~/models/EmailHistory";
 // import SMSHistorySchema from "~/models/SMSHistory";
 import ClientConnectionSchema from "~/models/ClientConnection";
-import AddressSchema from "~/models/Address";
-import WishListSchema from "~/models/WishList";
 import NotificationSchema from "~/models/Notification";
 import VisitSchema from "~/models/Visit";
 import ClientDetailSchema from "~/models/ClientDetail";
@@ -42,25 +33,16 @@ let Admin: Model<Document>,
   Employee: Model<Document>,
   User: Model<Document>,
   Product: Model<Document>,
-  Image: Model<Document>,
-  Category: Model<Document>,
-  Cart: Model<Document>,
-  Order: Model<Document>,
-  Address: Model<Document>,
-  WishList: Model<Document>,
   // SMSHistory: Model<Document>,
   EmailHistory: Model<Document>,
   SMSSettings: Model<Document>,
   GeneralSettings: Model<Document>,
-  ShippingTimeline: Model<Document>,
   NotificationSettings: Model<Document>,
   PaymentApi: Model<Document>,
   UserVisit: Model<Document>,
-  StockHistory: Model<Document>,
   SettingsBranch: Model<Document>,
   Payment: Model<Document>,
   Branch: Model<Document>,
-  GuestCart: Model<Document>,
   Permission: Model<Document>,
   Feature: Model<Document>, // main only
   ClientDetail: Model<Document>, //main only
@@ -187,19 +169,10 @@ const connectToDomainDatabase = async (domain: string) => {
       Employee = domainDb.model<Document>("employees");
       User = domainDb.model<Document>("users");
       Product = domainDb.model<Document>("products");
-      Category = domainDb.model<Document>("categories");
-      Image = domainDb.model<Document>("images");
-      Order = domainDb.model<Document>("orders");
-      Cart = domainDb.model<Document>("carts");
-      GuestCart = domainDb.model<Document>("guest_carts");
-      ShippingTimeline = domainDb.model<Document>("shipping_timelines");
       NotificationSettings = domainDb.model<Document>("notification_settings");
       SMSSettings = domainDb.model<Document>("sms_settings");
-      WishList = domainDb.model<Document>("wishlistss");
-      Address = domainDb.model<Document>("addresses");
       GeneralSettings = domainDb.model<Document>("general_settings");
       UserVisit = domainDb.model<Document>("user_visits");
-      StockHistory = domainDb.model<Document>("stock_histories");
       SettingsBranch = domainDb.model<Document>("settings_branch");
       Branch = domainDb.model<Document>("branches");
       Payment = domainDb.model<Document>("payments");
@@ -209,22 +182,11 @@ const connectToDomainDatabase = async (domain: string) => {
       Employee = domainDb.model<Document>("employees", EmployeeSchema);
       User = domainDb.model<Document>("users", StudentSchema);
       Product = domainDb.model<Document>("products", ProductSchema);
-      Category = domainDb.model<Document>("categories", CategorySchema);
-      Image = domainDb.model<Document>("images", ImageSchema);
-      Order = domainDb.model<Document>("orders", OrderSchema);
-      Cart = domainDb.model<Document>("carts", CartSchema);
-      GuestCart = domainDb.model<Document>("guest_carts", GuestCartSchema);
-      ShippingTimeline = domainDb.model<Document>(
-        "shipping_timelines",
-        ShippingTimelineSchema
-      );
       NotificationSettings = domainDb.model<Document>(
         "notification_settings",
         NotificationSchema
       );
       SMSSettings = domainDb.model<Document>("sms_settings", SMSSchema);
-      WishList = domainDb.model<Document>("wishlistss", WishListSchema);
-      Address = domainDb.model<Document>("addresses", AddressSchema);
       GeneralSettings = domainDb.model<Document>(
         "general_settings",
         GeneralSettingsSchema
@@ -232,10 +194,6 @@ const connectToDomainDatabase = async (domain: string) => {
       UserVisit = domainDb.model<Document>("user_visits", VisitSchema);
       Payment = domainDb.model<Document>("payments", PaymentSchema);
       Branch = domainDb.model<Document>("branches", BranchSchema);
-      StockHistory = domainDb.model<Document>(
-        "stock_histories",
-        StockHistorySchema
-      );
       SettingsBranch = domainDb.model<Document>(
         "settings_branch",
         SettingsBranchSchema
@@ -252,19 +210,10 @@ const connectToDomainDatabase = async (domain: string) => {
         Employee,
         User,
         Product,
-        Order,
-        Cart,
-        GuestCart,
-        Image,
-        ShippingTimeline,
-        Category,
         NotificationSettings,
         SMSSettings,
-        WishList,
-        Address,
         GeneralSettings,
         UserVisit,
-        StockHistory,
         Payment,
         SettingsBranch,
         Branch,
