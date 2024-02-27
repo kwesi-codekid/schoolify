@@ -1,6 +1,6 @@
 import { redirect, json } from "@remix-run/node";
 import moment from "moment";
-import { connectToDomainDatabase } from "~/mongoose.server";
+import { connectToDomainDatabase } from "~/mongoose";
 import SettingsController from "~/controllers/SettingsController.server";
 import PaymentController from "~/controllers/PaymentController";
 import SenderController from "~/controllers/SenderController";

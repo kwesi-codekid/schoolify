@@ -6,7 +6,7 @@ import CategorySchema from "~/models/Category";
 import AdminSchema from "~/models/Admin";
 import CartSchema from "~/models/Cart";
 import GuestCartSchema from "~/models/GuestCart";
-import UserSchema from "~/models/User";
+import StudentSchema from "~/models/User";
 import StockHistorySchema from "~/models/StockHistory";
 import OrderSchema from "~/models/Order";
 import ShippingTimelineSchema from "~/models/ShippingTimeline";
@@ -207,7 +207,7 @@ const connectToDomainDatabase = async (domain: string) => {
     } catch (error) {
       Admin = domainDb.model<Document>("admins", AdminSchema);
       Employee = domainDb.model<Document>("employees", EmployeeSchema);
-      User = domainDb.model<Document>("users", UserSchema);
+      User = domainDb.model<Document>("users", StudentSchema);
       Product = domainDb.model<Document>("products", ProductSchema);
       Category = domainDb.model<Document>("categories", CategorySchema);
       Image = domainDb.model<Document>("images", ImageSchema);

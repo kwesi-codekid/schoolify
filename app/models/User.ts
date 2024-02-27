@@ -1,6 +1,6 @@
-import { mongoose } from "~/mongoose.server";
+import { mongoose } from "~/mongoose";
 
-const UserSchema: mongoose.Schema = new mongoose.Schema(
+const StudentSchema: mongoose.Schema = new mongoose.Schema(
   {
     firstName: String,
     lastName: String,
@@ -19,4 +19,4 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default UserSchema;
+export default StudentSchema;

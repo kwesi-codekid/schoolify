@@ -1,5 +1,5 @@
 import axios from "axios";
-import { connectToDomainDatabase } from "~/mongoose.server";
+import { connectToDomainDatabase } from "~/mongoose";
 import { json } from "@remix-run/node";
 
 export default class SettingsController {

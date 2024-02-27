@@ -4,8 +4,8 @@ import {
   redirect,
   type SessionStorage,
 } from "@remix-run/node";
-import { connectToDomainDatabase } from "~/mongoose.server";
-import UserSchema from "~/models/User";
+import { connectToDomainDatabase } from "~/mongoose";
+import StudentSchema from "~/models/User";
 import { PaymentDetailSchema } from "../models/PaymentDetails";
 
 export default class PaymentDetailsController {
@@ -56,7 +56,7 @@ export default class PaymentDetailsController {
         "payment_details",
         PaymentDetailSchema
       );
-      this.User = clientDb.model("users", UserSchema);
+      this.User = clientDb.model("users", StudentSchema);
     }
   }
 

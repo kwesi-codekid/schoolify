@@ -1,4 +1,4 @@
-import { mongoose } from "~/mongoose.server";
+import { mongoose } from "~/mongoose";
 //  there will be two versions of this, one for global and one for client
 // global one will be lsited on client, for them to be able see newly added payment methods
 //  and once the client enables one, it get copied to their instance: allowing them to enter

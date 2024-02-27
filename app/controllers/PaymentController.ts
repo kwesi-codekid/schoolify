@@ -4,7 +4,7 @@ import {
   redirect,
   type SessionStorage,
 } from "@remix-run/node";
-import { connectToDomainDatabase } from "~/mongoose.server";
+import { connectToDomainDatabase } from "~/mongoose";
 import axios from "axios";
 import OrderController from "~/controllers/OrderController.server";
 

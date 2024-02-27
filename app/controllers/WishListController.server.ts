@@ -4,7 +4,7 @@ import {
   redirect,
   type SessionStorage,
 } from "@remix-run/node";
-import { connectToDomainDatabase } from "~/mongoose.server";
+import { connectToDomainDatabase } from "~/mongoose";
 
 export default class WishlistController {
   private request: Request;

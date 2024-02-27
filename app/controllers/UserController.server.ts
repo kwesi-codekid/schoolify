@@ -6,7 +6,7 @@ import {
 } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 import { commitFlashSession, getFlashSession } from "~/flash-session";
-import { connectToDomainDatabase } from "~/mongoose.server";
+import { connectToDomainDatabase } from "~/mongoose";
 
 // import { getClientIPAddress } from "remix-utils";
 

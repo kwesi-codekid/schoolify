@@ -4,7 +4,7 @@ import {
   type SessionStorage,
 } from "@remix-run/node";
 import bcrypt from "bcryptjs";
-import { connectToDomainDatabase } from "~/mongoose.server";
+import { connectToDomainDatabase } from "~/mongoose";
 import { commitFlashSession, getFlashSession } from "~/flash-session";
 export default class EmployeeAuthController {
   private request: Request;

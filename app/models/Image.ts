@@ -1,5 +1,5 @@
 import type { Schema } from "mongoose";
-import { mongoose } from "~/mongoose.server";
+import { mongoose } from "~/mongoose";
 
 const ImageSchema: Schema = new mongoose.Schema(
   {

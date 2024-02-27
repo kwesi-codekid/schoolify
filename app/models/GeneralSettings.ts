@@ -1,4 +1,4 @@
-import { mongoose } from "~/mongoose.server";
+import { mongoose } from "~/mongoose";
 
 const GeneralSettingsSchema = new mongoose.Schema(
   {

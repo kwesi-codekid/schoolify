@@ -5,7 +5,7 @@ import {
   redirect,
 } from "@remix-run/node";
 import bcrypt from "bcryptjs";
-import { connectToDomainDatabase, mongoose } from "~/mongoose.server";
+import { connectToDomainDatabase, mongoose } from "~/mongoose";
 import SenderController from "~/controllers/SenderController";
 import axios from "axios";
 import { permissions } from "~/assets/static-data";
