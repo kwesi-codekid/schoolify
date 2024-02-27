@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { connectToDomainDatabase, mongoose } from "~/mongoose";
 import SenderController from "~/controllers/SenderController";
 import axios from "axios";
-import { permissions } from "~/assets/static-data";
+// import { permissions } from "~/assets/static-data";
 
 export default class ClientSetupController {
   private request: Request;
