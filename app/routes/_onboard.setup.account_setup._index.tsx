@@ -1,16 +1,13 @@
-// import {
-//   json,
-//   type ActionFunction,
-//   type MetaFunction,
-//   type LoaderFunction,
-// } from "@remix-run/node";
-// import { Form } from "@remix-run/react";
+import {
+  json,
+  type ActionFunction,
+  type MetaFunction,
+  type LoaderFunction,
+} from "@remix-run/node";
+import { Form } from "@remix-run/react";
 
-// import { Input } from "~/components/ui/input";
-// import { Button } from "~/components/ui/button";
-// import ClientSetupController from "~/controllers/ClientSetupController";
-// import { Label } from "~/components/ui/label";
-// import { validateEmail, validatePassword } from "~/validators";
+import ClientSetupController from "~/controllers/ClientSetupController";
+import { validateEmail, validatePassword } from "~/validators";
 
 // export default function SetupProfile() {
 //   return (
@@ -46,63 +43,63 @@
 //   );
 // }
 
-// export const action: ActionFunction = async ({ request }) => {
-//   const formData = await request.formData();
+export const action: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
 
-//   let username = formData.get("username") as string;
-//   let email = formData.get("email") as string;
-//   let phone = formData.get("phone") as string;
-//   let password = formData.get("password") as string;
+  let username = formData.get("username") as string;
+  let email = formData.get("email") as string;
+  let phone = formData.get("phone") as string;
+  let password = formData.get("password") as string;
 
-//   if (typeof email !== "string" || typeof password !== "string") {
-//     return json(
-//       { message: "Invalid email or password", type: "error" },
-//       { status: 400 }
-//     );
-//   }
+  if (typeof email !== "string" || typeof password !== "string") {
+    return json(
+      { message: "Invalid email or password", type: "error" },
+      { status: 400 }
+    );
+  }
 
-//   const errors = {
-//     email: !validateEmail(email) ? "Invalid email" : "",
-//     password: !validatePassword(password)
-//       ? "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long."
-//       : "",
-//   };
+  const errors = {
+    email: !validateEmail(email) ? "Invalid email" : "",
+    password: !validatePassword(password)
+      ? "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long."
+      : "",
+  };
 
-//   if (Object.values(errors).some(Boolean)) {
-//     return json({ errors, fields: { email, password } }, { status: 400 });
-//   }
+  if (Object.values(errors).some(Boolean)) {
+    return json({ errors, fields: { email, password } }, { status: 400 });
+  }
 
-//   const setupController = await new ClientSetupController(request);
-//   return await setupController.createProfile({
-//     username,
-//     email,
-//     phone,
-//     password,
-//   });
-// };
+  const setupController = await new ClientSetupController(request);
+  return await setupController.createProfile({
+    username,
+    email,
+    phone,
+    password,
+  });
+};
 
-// export const loader: LoaderFunction = async ({ request }) => {
-//   return true;
-// };
+export const loader: LoaderFunction = async ({ request }) => {
+  return true;
+};
 
-// export const meta: MetaFunction = () => {
-//   return [
-//     { title: "ComClo - Setup Account" },
-//     {
-//       name: "description",
-//       content: "The best e-Commerce platform for your business.",
-//     },
-//     { name: "og:title", content: "ComClo" },
-//     { property: "og:type", content: "websites" },
-//     {
-//       name: "og:description",
-//       content: "The best e-Commerce platform for your business.",
-//     },
-//     {
-//       name: "og:image",
-//       content:
-//         "https://res.cloudinary.com/app-deity/image/upload/v1700242905/l843bauo5zpierh3noug.png",
-//     },
-//     { name: "og:url", content: "https://single-ecommerce.vercel.app" },
-//   ];
-// };
+export const meta: MetaFunction = () => {
+  return [
+    { title: "ComClo - Setup Account" },
+    {
+      name: "description",
+      content: "The best e-Commerce platform for your business.",
+    },
+    { name: "og:title", content: "ComClo" },
+    { property: "og:type", content: "websites" },
+    {
+      name: "og:description",
+      content: "The best e-Commerce platform for your business.",
+    },
+    {
+      name: "og:image",
+      content:
+        "https://res.cloudinary.com/app-deity/image/upload/v1700242905/l843bauo5zpierh3noug.png",
+    },
+    { name: "og:url", content: "https://single-ecommerce.vercel.app" },
+  ];
+};
