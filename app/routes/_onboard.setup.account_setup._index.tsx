@@ -81,7 +81,7 @@ export default function SetupProfile() {
               errorMessage={actionData?.errors?.password}
             />
             <Input
-              name="confrimPassword"
+              name="confirmPassword"
               label="Confirm Password"
               type="password"
               required
@@ -111,7 +111,16 @@ export const action: ActionFunction = async ({ request }) => {
   const phone = formData.get("phone") as string;
   const password = formData.get("password") as string;
   const confirmPasswordd = formData.get("confirmPassword") as string;
+  console.log({
+    firstName,
+    lastName,
+    email,
+    phone,
+    password,
+    confirmPasswordd,
+  });
 
+  // return true;
   const errors = {
     firstName: validateFirstName(firstName),
     lastName: validateFirstName(lastName),
@@ -121,6 +130,8 @@ export const action: ActionFunction = async ({ request }) => {
   };
 
   if (Object.values(errors).some(Boolean)) {
+    console.log({ errors });
+
     return json({ errors }, { status: 400 });
   }
 

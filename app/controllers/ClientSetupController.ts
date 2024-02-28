@@ -132,7 +132,7 @@ export default class ClientSetupController {
 
     return this.createClientSession(
       profile._id,
-      "/setup/account_setup/school_details"
+      "/setup/account_setup/school-info"
     );
   };
 
