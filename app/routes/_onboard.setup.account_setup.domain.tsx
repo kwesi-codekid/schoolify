@@ -6,6 +6,7 @@ import {
   unstable_parseMultipartFormData,
   type ActionFunction,
   type MetaFunction,
+  LoaderFunction,
 } from "@remix-run/node";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
 import { Input, Button, Checkbox } from "@nextui-org/react";
@@ -13,6 +14,7 @@ import UploadFileInput from "~/components/custom/upload-file-input";
 import ClientSetupController from "~/controllers/ClientSetupController";
 import { validateEmail, validateFirstName } from "~/validators";
 import { useState } from "react";
+import IdGenerator from "~/IdGenerator";
 
 export default function SetupDomain() {
   const actionData = useActionData();
@@ -105,54 +107,31 @@ export default function SetupDomain() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const uploadHandler = unstable_composeUploadHandlers(
-    // our custom upload handler
-    async ({ name, contentType, data, filename }) => {
-      if (name !== "schoolLogo") {
-        return undefined;
-      }
-      const buffer = [];
-      for await (const chunk of data) {
-        buffer.push(chunk);
-      }
-      const fileBuffer = Buffer.concat(buffer);
-      const base64Data = fileBuffer.toString("base64");
-      return `data:${contentType};base64,` + base64Data;
-    },
-    // fallback to memory for everything else
-    unstable_createMemoryUploadHandler()
-  );
+  const formData = await request.formData();
+  const domain = formData.get("domain") as string;
+  const database = (formData.get("domain") as string).split(".")[0];
 
-  const formData = await unstable_parseMultipartFormData(
-    request,
-    uploadHandler
-  );
-
-  const name = formData.get("schoolName") as string;
-  const email = formData.get("schoolEmail") as string;
-  const phone = formData.get("contactNumber") as string;
-  const schoolLogo = formData.get("schoolLogo") as string;
-
-  // return true;
-  const errors = {
-    schoolName: validateFirstName(name),
-    schoolEmail: validateEmail(email),
-    schoolLogo: schoolLogo ? null : "School Logo is required",
-    contactNumber: phone ? null : "Contact Number is required",
-  };
-
-  if (Object.values(errors).some(Boolean)) {
-    console.log({ errors });
-    return json({ errors }, { status: 400 });
+  if (typeof domain !== "string" || typeof database !== "string") {
+    return json({ error: "Invalid domain or database" }, { status: 400 });
   }
 
   const setupController = await new ClientSetupController(request);
-  return await setupController.createSchool({ name, email, phone, schoolLogo });
+  return await setupController.storeSchoolDomain({
+    domain,
+    database: `${database}_${IdGenerator(5)}`,
+  });
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const setupController = await new ClientSetupController(request);
+  const storeDetails = await setupController.getStore();
+
+  return { storeDetails };
 };
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Schoolify - Setup School" },
+    { title: "ComClo - Setup Domain & Database" },
     {
       name: "description",
       content: "The best e-Commerce platform for your business.",
