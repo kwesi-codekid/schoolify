@@ -8,14 +8,14 @@ import { Button } from "@nextui-org/react";
 export default function AccountSetup() {
   return (
     <div className="h-screen overflow-hidden bg-white dark:bg-slate-950 py-5 pb-16">
-      <section className="relative z-[10] max-w-5xl mx-auto flex items-center justify-end">
+      <section className="relative z-[10] max-w-5xl mx-auto flex items-center justify-end px-4">
         <ThemeSwitcher />
       </section>
 
       <section className="flex-1 max-w-5xl mx-auto h-full flex flex-col md:flex-row md:gap-8 p-5">
-        <div className="flex-1 h-full rounded-2xl bg-lightgreen/30"></div>
+        <div className="flex-1 h-full rounded-2xl bg-lightgreen/30 hidden md:flex"></div>
 
-        <div className="w-1/2 h-full relative z-10">
+        <div className="w-full md:w-1/2 h-full relative z-10">
           <Outlet />
         </div>
       </section>

@@ -17,10 +17,11 @@ export default function SetupSchoolInfo() {
       </div>
 
       <Form
+        encType="multipart/form-data"
         method="post"
-        className=" flex-1 flex flex-col md:pb-2 w-2/3 justify-between h-full"
+        className=" flex-1 flex flex-col md:pb-2 w-full md:w-2/3 gap-12 md:gap-0 md:justify-between h-full"
       >
-        <div className="flex flex-col md:gap-6">
+        <div className="flex flex-col gap-3 md:gap-6">
           <div className="w-full">
             <Input
               name="schoolName"
@@ -84,7 +85,7 @@ export default function SetupSchoolInfo() {
           </Button>
           <Button
             type="submit"
-            className="flex-1 h-11 font-montserrat md:text-lg bg-lightgreen hover:bg-lightgreen/80 text-slate-800"
+            className="flex-1 h-11 font-montserrat md:text-lg bg-lightgreen hover:bg-lightgreen/80 text-slate-800 font-semibold"
             variant="flat"
           >
             Continue

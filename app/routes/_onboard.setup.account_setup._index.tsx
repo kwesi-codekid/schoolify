@@ -21,7 +21,7 @@ export default function SetupProfile() {
   return (
     <section className="flex flex-col gap-4 md:gap-10 h-full">
       <div>
-        <p className="font-nunito text-violet-500 mb-3">Step 1/3</p>
+        <p className="font-nunito text-violet-500 mb-1 md:mb-3">Step 1/3</p>
         <h2 className="font-bold font-montserrat dark:text-white text-slate-800 text-3xl md:text-5xl lg:text-6xl">
           User Account Setup
         </h2>
@@ -29,10 +29,10 @@ export default function SetupProfile() {
 
       <Form
         method="post"
-        className=" flex-1 flex flex-col md:pb-10 justify-between h-full"
+        className=" flex-1 flex flex-col gap-6 md:gap-0 md:pb-10 md:justify-between h-full"
       >
         <div className="flex flex-col md:gap-10">
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
             <Input
               name="firstName"
               label="First Name"
@@ -49,7 +49,7 @@ export default function SetupProfile() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
             <Input
               name="email"
               label="Email"
@@ -69,7 +69,7 @@ export default function SetupProfile() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
             <Input
               name="password"
               label="Password"
@@ -92,7 +92,7 @@ export default function SetupProfile() {
         </div>
         <Button
           type="submit"
-          className="h-12 font-montserrat md:text-lg w-1/2 bg-lightgreen hover:bg-lightgreen/80 text-slate-800"
+          className="h-12 font-montserrat md:text-lg w-1/2 bg-lightgreen hover:bg-lightgreen/80 text-slate-800 font-semibold"
           variant="flat"
         >
           Continue
