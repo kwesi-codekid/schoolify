@@ -1,5 +1,6 @@
 import {
   redirect,
+  json,
   unstable_composeUploadHandlers,
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
