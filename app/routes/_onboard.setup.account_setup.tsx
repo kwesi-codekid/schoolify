@@ -12,10 +12,10 @@ export default function AccountSetup() {
         <ThemeSwitcher />
       </section>
 
-      <section className="flex-1 max-w-5xl mx-auto h-full flex flex-col md:flex-row p-5">
+      <section className="flex-1 max-w-5xl mx-auto h-full flex flex-col md:flex-row md:gap-8 p-5">
         <div className="flex-1 h-full rounded-2xl bg-lightgreen/30"></div>
 
-        <div className="w-1/2 h-full">
+        <div className="w-1/2 h-full relative z-10">
           <Outlet />
         </div>
       </section>
