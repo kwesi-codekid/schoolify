@@ -181,7 +181,7 @@ export default class ClientSetupController {
     return school;
   };
 
-  public schoolDomain = async ({
+  public storeSchoolDomain = async ({
     domain,
     database,
   }: {
