@@ -1,8 +1,16 @@
-import { type ActionFunction, type MetaFunction } from "@remix-run/node";
+import {
+  redirect,
+  unstable_composeUploadHandlers,
+  unstable_createMemoryUploadHandler,
+  unstable_parseMultipartFormData,
+  type ActionFunction,
+  type MetaFunction,
+} from "@remix-run/node";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
 import { Input, Button } from "@nextui-org/react";
 import UploadFileInput from "~/components/custom/upload-file-input";
 import ClientSetupController from "~/controllers/ClientSetupController";
+import { validateEmail, validateFirstName } from "~/validators";
 
 export default function SetupSchoolInfo() {
   const actionData = useActionData();
@@ -97,14 +105,49 @@ export default function SetupSchoolInfo() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
+  const uploadHandler = unstable_composeUploadHandlers(
+    // our custom upload handler
+    async ({ name, contentType, data, filename }) => {
+      if (name !== "schoolLogo") {
+        return undefined;
+      }
+      const buffer = [];
+      for await (const chunk of data) {
+        buffer.push(chunk);
+      }
+      const fileBuffer = Buffer.concat(buffer);
+      const base64Data = fileBuffer.toString("base64");
+      return `data:${contentType};base64,` + base64Data;
+    },
+    // fallback to memory for everything else
+    unstable_createMemoryUploadHandler()
+  );
 
-  let name = formData.get("name") as string;
-  let email = formData.get("email") as string;
-  let phone = formData.get("phone") as string;
+  const formData = await unstable_parseMultipartFormData(
+    request,
+    uploadHandler
+  );
+
+  const name = formData.get("schoolName") as string;
+  const email = formData.get("schoolEmail") as string;
+  const phone = formData.get("contactNumber") as string;
+  const schoolLogo = formData.get("schoolLogo") as string;
+
+  // return true;
+  const errors = {
+    schoolName: validateFirstName(name),
+    schoolEmail: validateEmail(email),
+    schoolLogo: schoolLogo ? null : "School Logo is required",
+    contactNumber: phone ? null : "Contact Number is required",
+  };
+
+  if (Object.values(errors).some(Boolean)) {
+    console.log({ errors });
+    return json({ errors }, { status: 400 });
+  }
 
   const setupController = await new ClientSetupController(request);
-  return await setupController.createStore({ name, email, phone });
+  return await setupController.createSchool({ name, email, phone, schoolLogo });
 };
 
 export const meta: MetaFunction = () => {

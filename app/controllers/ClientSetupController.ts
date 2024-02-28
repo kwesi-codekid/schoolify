@@ -136,39 +136,52 @@ export default class ClientSetupController {
     );
   };
 
-  public createStore = async ({
-    name: storeName,
+  public createSchool = async ({
+    name: schoolName,
     email,
     phone,
+    schoolLogo,
   }: {
     name: string;
     email: string;
     phone: string;
+    schoolLogo: string;
   }) => {
-    let userId = await this.getClientId();
+    const userId = await this.getClientId();
 
-    await this.ClientConnection.create({
-      admin: userId,
-      storeName,
-      email,
-      phone,
-      domain: storeName.replace(" ", "").replace("  ", "").trim(),
-    });
+    await this.ClientConnection.findOneAndUpdate(
+      {
+        admin: userId,
+      },
+      {
+        admin: userId,
+        schoolName,
+        email,
+        phone,
+        schoolLogo,
+        domain: schoolName.replace(" ", "").replace("  ", "").trim(),
+      },
+      {
+        upsert: true, // Create a new document if not found
+        new: true, // Return the modified document (default is the original)
+        runValidators: true, // Run validators (e.g., schema validation) on the update
+      }
+    );
 
     return redirect("/setup/account_setup/domain");
   };
 
   public getStore = async () => {
-    let userId = await this.getClientId();
+    const userId = await this.getClientId();
 
-    let store = await this.ClientConnection.findOne({
+    const school = await this.ClientConnection.findOne({
       admin: userId,
     });
 
-    return store;
+    return school;
   };
 
-  public storeDomain = async ({
+  public schoolDomain = async ({
     domain,
     database,
   }: {
@@ -212,11 +225,11 @@ export default class ClientSetupController {
         console.error("error in controller:", error);
       });
 
-    const storeDetails = await this.getStore();
+    const schoolDetails = await this.getStore();
     const senderController = await new SenderController(this.request);
     await senderController.sendEmail({
       from: '"ComClo" <isupport@medsov.com>',
-      to: `"${storeDetails.name}" <${storeDetails.email}>`,
+      to: `"${schoolDetails.name}" <${schoolDetails.email}>`,
       subject: "Congratulations",
       body: `<!DOCTYPE html>
       <html lang="en">
@@ -405,7 +418,7 @@ export default class ClientSetupController {
           // const senderController = await new SenderController(this.request);
           // await senderController.sendEmail({
           //   from: '"ComClo" <isupport@medsov.com>',
-          //   to: `"${connection.storename}" <${connection.email}>`,
+          //   to: `"${connection.schoolname}" <${connection.email}>`,
           //   subject: "All Done!",
           //   body: `<!DOCTYPE html>
           //   <html lang="en">

@@ -131,7 +131,6 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (Object.values(errors).some(Boolean)) {
     console.log({ errors });
-
     return json({ errors }, { status: 400 });
   }
 
