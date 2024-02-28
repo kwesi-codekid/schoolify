@@ -1,6 +1,6 @@
 import { mongoose } from "~/mongoose";
 
-const TeacherSchema = new mongoose.Schema(
+const StaffSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
@@ -17,20 +17,8 @@ const TeacherSchema = new mongoose.Schema(
     password: String,
     gender: String,
     status: String,
-    subjects: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "subjects",
-      },
-    ],
-    classes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "classes",
-      },
-    ],
   },
   { timestamps: true }
 );
 
-export default TeacherSchema;
+export default StaffSchema;

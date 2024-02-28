@@ -1,6 +1,4 @@
 import mongoose, { type Document, type Model, type Connection } from "mongoose";
-import ProductSchema from "~/models/Product";
-import EmployeeSchema from "~/models/Employee";
 import AdminSchema from "~/models/Admin";
 import StudentSchema from "~/models/User";
 import EmailHistorySchema from "~/models/EmailHistory";
@@ -18,6 +16,12 @@ import BranchSchema from "./models/Branch";
 import PaymentSchema from "./models/PaymentDetails";
 import SubscriptionHistorySchema from "./models/Subscription";
 import PermissionSchema from "./models/Permission";
+import TeacherSchema from "./models/Teacher";
+import FeeSchema from "./models/Fee";
+import ClassSchema from "./models/Class";
+import FeeStructureSchema from "./models/FeeStructure";
+import SubjectSchema from "./models/Subject";
+import ParentSchema from "./models/Parent";
 
 interface DomainDatabase {
   connection: Connection;
@@ -30,10 +34,15 @@ interface DomainDatabase {
 }
 
 let Admin: Model<Document>,
-  Employee: Model<Document>,
-  User: Model<Document>,
-  Product: Model<Document>,
-  // SMSHistory: Model<Document>,
+  // ----------------- Main Database Models -----------------
+  Teacher: Model<Document>,
+  Student: Model<Document>,
+  Fee: Model<Document>,
+  FeeStructure: Model<Document>,
+  Class: Model<Document>,
+  Subject: Model<Document>,
+  Parent: Model<Document>,
+  //  ----------------- Other Models -----------------
   EmailHistory: Model<Document>,
   SMSSettings: Model<Document>,
   GeneralSettings: Model<Document>,
@@ -44,10 +53,11 @@ let Admin: Model<Document>,
   Payment: Model<Document>,
   Branch: Model<Document>,
   Permission: Model<Document>,
-  Feature: Model<Document>, // main only
-  ClientDetail: Model<Document>, //main only
-  ClientConnection: Model<Document>, //main only
-  SubscriptionHistory: Model<Document>; //main only
+  // ----------------- Central Database Models -----------------
+  Feature: Model<Document>,
+  ClientDetail: Model<Document>,
+  ClientConnection: Model<Document>,
+  SubscriptionHistory: Model<Document>;
 
 // Cache for storing domain database connections
 const domainDbCache: Map<string, DomainDatabase> = new Map();
@@ -166,9 +176,15 @@ const connectToDomainDatabase = async (domain: string) => {
 
     try {
       Admin = domainDb.model<Document>("admins");
-      Employee = domainDb.model<Document>("employees");
-      User = domainDb.model<Document>("users");
-      Product = domainDb.model<Document>("products");
+
+      Teacher = domainDb.model<Document>("teacher");
+      Student = domainDb.model<Document>("students");
+      Fee = domainDb.model<Document>("fees");
+      Class = domainDb.model<Document>("classes");
+      FeeStructure = domainDb.model<Document>("fee_structures");
+      Subject = domainDb.model<Document>("subjects");
+      Parent = domainDb.model<Document>("parents");
+
       NotificationSettings = domainDb.model<Document>("notification_settings");
       SMSSettings = domainDb.model<Document>("sms_settings");
       GeneralSettings = domainDb.model<Document>("general_settings");
@@ -179,9 +195,18 @@ const connectToDomainDatabase = async (domain: string) => {
       Permission = domainDb.model<Document>("permissions");
     } catch (error) {
       Admin = domainDb.model<Document>("admins", AdminSchema);
-      Employee = domainDb.model<Document>("employees", EmployeeSchema);
-      User = domainDb.model<Document>("users", StudentSchema);
-      Product = domainDb.model<Document>("products", ProductSchema);
+
+      Teacher = domainDb.model<Document>("teacher", TeacherSchema);
+      Student = domainDb.model<Document>("students", StudentSchema);
+      Fee = domainDb.model<Document>("fees", FeeSchema);
+      Class = domainDb.model<Document>("classes", ClassSchema);
+      FeeStructure = domainDb.model<Document>(
+        "fee_structures",
+        FeeStructureSchema
+      );
+      Subject = domainDb.model<Document>("subjects", SubjectSchema);
+      Parent = domainDb.model<Document>("parents", ParentSchema);
+
       NotificationSettings = domainDb.model<Document>(
         "notification_settings",
         NotificationSchema
@@ -207,9 +232,13 @@ const connectToDomainDatabase = async (domain: string) => {
       connection: domainDb,
       models: {
         Admin,
-        Employee,
-        User,
-        Product,
+        Teacher,
+        Student,
+        Parent,
+        Class,
+        Fee,
+        FeeStructure,
+        Subject,
         NotificationSettings,
         SMSSettings,
         GeneralSettings,

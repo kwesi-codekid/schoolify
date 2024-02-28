@@ -1,6 +1,6 @@
 import { mongoose } from "~/mongoose";
 
-const TeacherSchema = new mongoose.Schema(
+const ParentSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
@@ -10,27 +10,21 @@ const TeacherSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: String,
+    },
     email: {
       type: String,
-      unique: true,
     },
-    password: String,
-    gender: String,
-    status: String,
-    subjects: [
+
+    ward: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "subjects",
-      },
-    ],
-    classes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "classes",
+        ref: "students",
       },
     ],
   },
   { timestamps: true }
 );
 
-export default TeacherSchema;
+export default ParentSchema;
