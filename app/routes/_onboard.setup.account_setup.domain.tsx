@@ -62,8 +62,8 @@ export default function SetupDomain() {
               required
               variant="underlined"
               className={`"font-nunito" ${isSelected ? "block" : "hidden"}`}
-              isInvalid={actionData?.errors?.domainName ? true : false}
-              errorMessage={actionData?.errors?.domainName}
+              isInvalid={actionData?.errors?.customDomain ? true : false}
+              errorMessage={actionData?.errors?.customDomain}
             />
           </div>
         </div>
