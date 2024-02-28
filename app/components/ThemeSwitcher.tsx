@@ -7,7 +7,13 @@ import { Button } from "@nextui-org/react";
 import { Sun } from "~/assets/icons/Sun";
 import { Moon } from "~/assets/icons/Moon";
 
-export function ThemeSwitcher() {
+export function ThemeSwitcher({
+  text,
+  btnSize,
+}: {
+  text?: string;
+  btnSize?: "sm" | "md" | "lg";
+}) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -18,9 +24,9 @@ export function ThemeSwitcher() {
   if (!mounted) return null;
 
   return (
-    <div>
+    <div className="flex items-center gap-1">
       <Button
-        size="sm"
+        size={btnSize ? btnSize : "sm"}
         isIconOnly
         radius="full"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -36,6 +42,7 @@ export function ThemeSwitcher() {
           <Moon className="size-5" />
         )}
       </Button>
+      {text}
     </div>
   );
 }

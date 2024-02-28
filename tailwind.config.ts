@@ -1,4 +1,8 @@
 import { nextui } from "@nextui-org/react";
+import defaultTheme from "tailwindcss/defaultTheme";
+
+import colors from "tailwindcss/colors";
+import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 
 import type { Config } from "tailwindcss";
 
@@ -14,8 +18,24 @@ export default {
         nunito: ["Nunito", "sans-serif"],
         quicksand: ["Quicksand", "sans-serif"],
       },
+      colors: {
+        lightgreen: "#3cf413",
+        deepgreen: "#67C40F",
+      },
     },
   },
   darkMode: "class",
-  plugins: [nextui(), require("tailwindcss-animate")],
+  plugins: [nextui(), require("tailwindcss-animate"), addVariablesForColors],
 } satisfies Config;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function addVariablesForColors({ addBase, theme }: any) {
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}
