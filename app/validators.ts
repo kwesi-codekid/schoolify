@@ -65,6 +65,22 @@ export const confirmPassword = (password: string, confirmPassword: string) => {
   return null;
 };
 
+export const validateSchoolName = (schoolName: string) => {
+  const nameRegex = /^[a-zA-Z0-9\s,'-]*$/;
+
+  // Check if schoolName is not empty
+  if (!schoolName.trim()) {
+    return "Please enter a school name.";
+  }
+
+  // Check if schoolName contains only letters
+  if (!nameRegex.test(schoolName)) {
+    return "School name should contain only letters.";
+  }
+
+  return null;
+};
+
 export const validateFirstName = (firstName: string) => {
   const nameRegex = /^[a-zA-Z]+$/;
 
