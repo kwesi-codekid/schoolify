@@ -16,6 +16,10 @@ const ClientConnectionSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    schoolLogo: {
+      type: String,
+      default: null,
+    },
     databaseUri: String,
     businessName: String,
     dbName: String,
