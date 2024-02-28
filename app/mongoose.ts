@@ -100,22 +100,16 @@ const fetchDomainConnectionDetails = async (domain: string) => {
 const connectToDomainDatabase = async (domain: string) => {
   if (domain === process.env.CENTRAL_DOMAIN) {
     try {
-      NotificationSettings = centralDb.model<Document>("notification_settings");
       SMSSettings = centralDb.model<Document>("sms_settings");
       // SMSHistory = centralDb.model<Document>("sms_history");
       EmailHistory = centralDb.model<Document>("email_history");
       Feature = centralDb.model<Document>("feature_requests");
       ClientConnection = centralDb.model<Document>("client_connections");
       ClientDetail = centralDb.model<Document>("client_details");
-      UserVisit = centralDb.model<Document>("user_visits");
       PaymentApi = centralDb.model<Document>("payment_apis");
       GeneralSettings = centralDb.model<Document>("general_settings");
       SubscriptionHistory = centralDb.model<Document>("subscription_histories");
     } catch (error) {
-      NotificationSettings = centralDb.model<Document>(
-        "notification_settings",
-        NotificationSchema
-      );
       SMSSettings = centralDb.model<Document>("sms_settings", SMSSchema);
       // SMSHistory = centralDb.model<Document>("sms_history", SMSHistorySchema);
       EmailHistory = centralDb.model<Document>(
@@ -131,7 +125,6 @@ const connectToDomainDatabase = async (domain: string) => {
         "client_details",
         ClientDetailSchema
       );
-      UserVisit = centralDb.model<Document>("user_visits", VisitSchema);
       PaymentApi = centralDb.model<Document>("payment_apis", PaymentApiSchema);
       GeneralSettings = centralDb.model<Document>(
         "general_settings",
@@ -148,7 +141,6 @@ const connectToDomainDatabase = async (domain: string) => {
       EmailHistory,
       ClientConnection,
       ClientDetail,
-      UserVisit,
       PaymentApi,
       SubscriptionHistory,
     };

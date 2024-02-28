@@ -7,7 +7,12 @@ import {
 import { Form } from "@remix-run/react";
 
 import ClientSetupController from "~/controllers/ClientSetupController";
-import { validateEmail, validatePassword } from "~/validators";
+import {
+  validateEmail,
+  validatePassword,
+  confirmPassword,
+  validateFirstName,
+} from "~/validators";
 
 export default function SetupProfile() {
   return (
@@ -46,32 +51,29 @@ export default function SetupProfile() {
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
 
-  const username = formData.get("username") as string;
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
   const password = formData.get("password") as string;
-
-  if (typeof email !== "string" || typeof password !== "string") {
-    return json(
-      { message: "Invalid email or password", type: "error" },
-      { status: 400 }
-    );
-  }
+  const confirmPasswordd = formData.get("confirmPassword") as string;
 
   const errors = {
-    email: !validateEmail(email) ? "Invalid email" : "",
-    password: !validatePassword(password)
-      ? "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long."
-      : "",
+    firstName: validateFirstName(firstName),
+    lastName: validateFirstName(lastName),
+    email: validateEmail(email),
+    password: validatePassword(password),
+    confirmPassword: confirmPassword(password, confirmPasswordd),
   };
 
   if (Object.values(errors).some(Boolean)) {
-    return json({ errors, fields: { email, password } }, { status: 400 });
+    return json({ errors }, { status: 400 });
   }
 
   const setupController = await new ClientSetupController(request);
   return await setupController.createProfile({
-    username,
+    firstName,
+    lastName,
     email,
     phone,
     password,

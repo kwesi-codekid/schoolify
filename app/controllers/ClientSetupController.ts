@@ -100,12 +100,14 @@ export default class ClientSetupController {
   };
 
   public createProfile = async ({
-    username,
+    firstName,
+    lastName,
     email,
     phone,
     password,
   }: {
-    username: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     password: string;
@@ -120,8 +122,9 @@ export default class ClientSetupController {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    let profile = await this.ClientDetail.create({
-      username,
+    const profile = await this.ClientDetail.create({
+      firstName,
+      lastName,
       email,
       phone,
       password: hashedPassword,
@@ -129,7 +132,7 @@ export default class ClientSetupController {
 
     return this.createClientSession(
       profile._id,
-      "/setup/account_setup/store_info"
+      "/setup/account_setup/school_details"
     );
   };
 

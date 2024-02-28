@@ -7,7 +7,8 @@ const ClientDetailSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    username: String,
+    firstName: String,
+    lastName: String,
     phone: String,
     password: String,
     propagated: {

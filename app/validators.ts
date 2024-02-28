@@ -46,17 +46,52 @@ export const validateAddress = (address: string) => {
   return addressRegex.test(address);
 };
 
-export const passwordMatch = (password: string, confirmPassword: string) => {
+export const passwordMatch = (password: string) => {
   if (!password) {
     return "Password is required";
   }
 
+  return null;
+};
+
+export const confirmPassword = (password: string, confirmPassword: string) => {
   if (!confirmPassword) {
     return "Confirm password is required";
   }
-
   if (password !== confirmPassword) {
     return "Passwords do not match";
+  }
+
+  return null;
+};
+
+export const validateFirstName = (firstName: string) => {
+  const nameRegex = /^[a-zA-Z]+$/;
+
+  // Check if firstName is not empty
+  if (!firstName.trim()) {
+    return "Please enter a first name.";
+  }
+
+  // Check if firstName contains only letters
+  if (!nameRegex.test(firstName)) {
+    return "First name should contain only letters.";
+  }
+
+  return null;
+};
+
+export const validateLastName = (lastName: string) => {
+  const nameRegex = /^[a-zA-Z]+$/;
+
+  // Check if lastName is not empty
+  if (!lastName.trim()) {
+    return "Please enter a last name.";
+  }
+
+  // Check if lastName contains only letters
+  if (!nameRegex.test(lastName)) {
+    return "Last name should contain only letters.";
   }
 
   return null;
