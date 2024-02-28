@@ -1,48 +1,51 @@
-// import { type MetaFunction, type LoaderFunction } from "@remix-run/node";
-// import { Outlet } from "@remix-run/react";
+import { type MetaFunction, type LoaderFunction } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 // import logo from "~/assets/logo.png";
+import { ThemeSwitcher } from "~/components/ThemeSwitcher";
+import { BackgroundBeams } from "~/components/ui/background-beams";
+import { Button } from "@nextui-org/react";
 
-// export default function AccountSetup() {
-//   return (
-//     <div className="flex min-h-screen w-full items-center py-36 flex-col bg-slate-100/90 dark:bg-slate-900 dark:text-white">
-//       <section className="w-1/2 mx-auto">
-//         <img src={logo} alt="" className="w-20" />
+export default function AccountSetup() {
+  return (
+    <div className="h-screen overflow-hidden bg-white dark:bg-slate-950 py-5 pb-16">
+      <section className="relative z-[10] max-w-5xl mx-auto flex items-center justify-end">
+        <ThemeSwitcher />
+      </section>
 
-//         <h3 className="mx-auto text-4xl font-bold ">Set Up your Account</h3>
+      <section className="flex-1 max-w-5xl mx-auto h-full flex flex-col md:flex-row p-5">
+        <div className="flex-1 h-full rounded-2xl bg-lightgreen/30"></div>
 
-//         <p className="mt-3 text-base font-medium">
-//           It's time to configure your account to tailor ComClo to your specific
-//           needs. We'll guide you through the process step by step.
-//         </p>
-//       </section>
+        <div className="w-1/2 h-full">
+          <Outlet />
+        </div>
+      </section>
+      <BackgroundBeams className="" />
+    </div>
+  );
+}
 
-//       <Outlet />
-//     </div>
-//   );
-// }
+export const loader: LoaderFunction = async ({ request }) => {
+  return {};
+};
 
-// export const loader: LoaderFunction = async ({ request }) => {
-//   return {};
-// };
-
-// export const meta: MetaFunction = () => {
-//   return [
-//     { title: "ComClo - Setup" },
-//     {
-//       name: "description",
-//       content: "The best e-Commerce platform for your business.",
-//     },
-//     { name: "og:title", content: "ComClo" },
-//     { property: "og:type", content: "websites" },
-//     {
-//       name: "og:description",
-//       content: "The best e-Commerce platform for your business.",
-//     },
-//     {
-//       name: "og:image",
-//       content:
-//         "https://res.cloudinary.com/app-deity/image/upload/v1700242905/l843bauo5zpierh3noug.png",
-//     },
-//     { name: "og:url", content: "https://single-ecommerce.vercel.app" },
-//   ];
-// };
+export const meta: MetaFunction = () => {
+  return [
+    { title: "ComClo - Setup" },
+    {
+      name: "description",
+      content: "The best e-Commerce platform for your business.",
+    },
+    { name: "og:title", content: "ComClo" },
+    { property: "og:type", content: "websites" },
+    {
+      name: "og:description",
+      content: "The best e-Commerce platform for your business.",
+    },
+    {
+      name: "og:image",
+      content:
+        "https://res.cloudinary.com/app-deity/image/upload/v1700242905/l843bauo5zpierh3noug.png",
+    },
+    { name: "og:url", content: "https://single-ecommerce.vercel.app" },
+  ];
+};

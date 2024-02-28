@@ -9,47 +9,47 @@ import { Form } from "@remix-run/react";
 import ClientSetupController from "~/controllers/ClientSetupController";
 import { validateEmail, validatePassword } from "~/validators";
 
-// export default function SetupProfile() {
-//   return (
-//     <section className="w-1/2 mx-auto mt-11">
-//       <p className="font-bold text-2xl mb-3">User Profile</p>
+export default function SetupProfile() {
+  return (
+    <section className="w-1/2 mx-auto">
+      <p className="font-bold text-2xl mb-3">User Profile</p>
 
-//       <Form method="POST" className="flex flex-col gap-3">
-//         <div className="grid w-full items-center gap-1.5">
-//           <Label htmlFor="username">Your Name</Label>
-//           <Input id="username" name="username" type="text" />
-//         </div>
+      {/* <Form method="POST" className="flex flex-col gap-3">
+        <div className="grid w-full items-center gap-1.5">
+          <Label htmlFor="username">Your Name</Label>
+          <Input id="username" name="username" type="text" />
+        </div>
 
-//         <div className="grid w-full items-center gap-1.5">
-//           <Label htmlFor="email">Email</Label>
-//           <Input id="email" name="email" type="email" />
-//         </div>
+        <div className="grid w-full items-center gap-1.5">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" name="email" type="email" />
+        </div>
 
-//         <div className="grid w-full items-center gap-1.5">
-//           <Label htmlFor="phone">Phone Number</Label>
-//           <Input id="phone" name="phone" type="text" />
-//         </div>
+        <div className="grid w-full items-center gap-1.5">
+          <Label htmlFor="phone">Phone Number</Label>
+          <Input id="phone" name="phone" type="text" />
+        </div>
 
-//         <div className="grid w-full items-center gap-1.5">
-//           <Label htmlFor="password">Password</Label>
-//           <Input id="password" name="password" type="password" />
-//         </div>
+        <div className="grid w-full items-center gap-1.5">
+          <Label htmlFor="password">Password</Label>
+          <Input id="password" name="password" type="password" />
+        </div>
 
-//         <Button type="submit" className="mt-2">
-//           Proceed
-//         </Button>
-//       </Form>
-//     </section>
-//   );
-// }
+        <Button type="submit" className="mt-2">
+          Proceed
+        </Button>
+      </Form> */}
+    </section>
+  );
+}
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
 
-  let username = formData.get("username") as string;
-  let email = formData.get("email") as string;
-  let phone = formData.get("phone") as string;
-  let password = formData.get("password") as string;
+  const username = formData.get("username") as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
+  const password = formData.get("password") as string;
 
   if (typeof email !== "string" || typeof password !== "string") {
     return json(
