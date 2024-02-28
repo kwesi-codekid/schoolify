@@ -11,7 +11,11 @@ import { Form, useActionData, useNavigate } from "@remix-run/react";
 import { Input, Button } from "@nextui-org/react";
 import UploadFileInput from "~/components/custom/upload-file-input";
 import ClientSetupController from "~/controllers/ClientSetupController";
-import { validateEmail, validateFirstName } from "~/validators";
+import {
+  validateEmail,
+  validateFirstName,
+  validateSchoolName,
+} from "~/validators";
 
 export default function SetupSchoolInfo() {
   const actionData = useActionData();
@@ -136,7 +140,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   // return true;
   const errors = {
-    schoolName: validateFirstName(name),
+    schoolName: validateSchoolName(name),
     schoolEmail: validateEmail(email),
     schoolLogo: schoolLogo ? null : "School Logo is required",
     contactNumber: phone ? null : "Contact Number is required",
