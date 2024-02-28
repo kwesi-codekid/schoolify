@@ -108,16 +108,23 @@ export default function SetupDomain() {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  const domain = formData.get("domain") as string;
-  const database = (formData.get("domain") as string).split(".")[0];
+  const domainName = formData.get("domainName") as string;
+  const customName = formData.get("customName") as string;
+  const database = domainName.split(".")[0];
 
-  if (typeof domain !== "string" || typeof database !== "string") {
+  if (typeof domainName !== "string" || typeof database !== "string") {
     return json({ error: "Invalid domain or database" }, { status: 400 });
   }
 
+  console.log({
+    domain: customName ? customName : domainName + ".schoolify.com",
+    database: `${database}_${IdGenerator(7)}`,
+  });
+
+  //   return true;
   const setupController = await new ClientSetupController(request);
   return await setupController.storeSchoolDomain({
-    domain,
+    domain: customName ? customName : domainName + ".schoolify.com",
     database: `${database}_${IdGenerator(5)}`,
   });
 };
@@ -131,7 +138,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "ComClo - Setup Domain & Database" },
+    { title: "Schollify - Setup Domain" },
     {
       name: "description",
       content: "The best e-Commerce platform for your business.",
