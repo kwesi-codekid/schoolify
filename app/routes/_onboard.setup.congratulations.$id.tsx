@@ -21,7 +21,7 @@ export default function Congratulation() {
       <section className="md:w-5/6 mx-auto px-4 flex flex-col z-10">
         {/* <img src={logo} alt="" className="w-48 mx-auto" /> */}
 
-        {View}
+        <div className="md:max-w-2xl mx-auto">{View}</div>
 
         <h1 className="gradient-text backdrop-blur-lg opacity-90 text-4xl md:text-6xl font-bold text-center">
           Congratulations!
