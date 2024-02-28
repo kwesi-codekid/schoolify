@@ -1,6 +1,7 @@
 import { type ActionFunction, type MetaFunction } from "@remix-run/node";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
 import { Input, Button } from "@nextui-org/react";
+import UploadFileInput from "~/components/custom/upload-file-input";
 import ClientSetupController from "~/controllers/ClientSetupController";
 
 export default function SetupSchoolInfo() {
@@ -17,10 +18,10 @@ export default function SetupSchoolInfo() {
 
       <Form
         method="post"
-        className=" flex-1 flex flex-col md:pb-10 justify-between h-full"
+        className=" flex-1 flex flex-col md:pb-2 w-2/3 justify-between h-full"
       >
-        <div className="flex flex-col md:gap-10">
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+        <div className="flex flex-col md:gap-6">
+          <div className="w-full">
             <Input
               name="schoolName"
               label="School Name"
@@ -30,7 +31,7 @@ export default function SetupSchoolInfo() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+          <div className="w-full">
             <Input
               name="schoolEmail"
               label="School Email"
@@ -43,7 +44,7 @@ export default function SetupSchoolInfo() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:gap-6">
+          <div className="w-full">
             <Input
               name="contactNumber"
               label="Contact Number"
@@ -52,9 +53,13 @@ export default function SetupSchoolInfo() {
               className="font-nunito"
             />
           </div>
+
+          <div className="w-full">
+            <UploadFileInput name="schoolLogo" />
+          </div>
         </div>
 
-        <div className="w-2/3 flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <Button
             className="w-1/2 h-full font-montserrat md:text-lg"
             onClick={() => navigate("/setup/account_setup")}
