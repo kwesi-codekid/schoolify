@@ -6,7 +6,10 @@ const ClientConnectionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "client_details",
     },
-    storeName: String,
+    schoolName: {
+      type: String,
+      required: true,
+    },
     email: String,
     phone: String,
     domain: {

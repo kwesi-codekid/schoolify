@@ -136,7 +136,7 @@ export default class ClientSetupController {
     );
   };
 
-  public createStore = async ({
+  public createSchool = async ({
     name: storeName,
     email,
     phone,
@@ -145,11 +145,11 @@ export default class ClientSetupController {
     email: string;
     phone: string;
   }) => {
-    let userId = await this.getClientId();
+    const userId = await this.getClientId();
 
     await this.ClientConnection.create({
       admin: userId,
-      storeName,
+      schoolName,
       email,
       phone,
       domain: storeName.replace(" ", "").replace("  ", "").trim(),

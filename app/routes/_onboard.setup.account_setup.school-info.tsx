@@ -98,12 +98,12 @@ export default function SetupSchoolInfo() {
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
 
-  let name = formData.get("name") as string;
-  let email = formData.get("email") as string;
-  let phone = formData.get("phone") as string;
+  let name = formData.get("schoolName") as string;
+  let email = formData.get("schoolEmail") as string;
+  let phone = formData.get("contactNumber") as string;
 
   const setupController = await new ClientSetupController(request);
-  return await setupController.createStore({ name, email, phone });
+  return await setupController.createSchool({ name, email, phone });
 };
 
 export const meta: MetaFunction = () => {
