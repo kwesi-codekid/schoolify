@@ -37,15 +37,21 @@ export default function SetupProfile() {
               name="firstName"
               label="First Name"
               required
+              color="success"
               variant="underlined"
               className="font-nunito"
+              isInvalid={actionData?.errors?.firstName ? true : false}
+              errorMessage={actionData?.errors?.firstName}
             />
             <Input
               name="lastName"
               label="Last Name"
               required
+              color="success"
               variant="underlined"
               className="font-nunito"
+              isInvalid={actionData?.errors?.lastName ? true : false}
+              errorMessage={actionData?.errors?.lastName}
             />
           </div>
 
@@ -57,6 +63,7 @@ export default function SetupProfile() {
               required
               variant="underlined"
               className="font-nunito"
+              color="success"
               isInvalid={actionData?.errors?.email ? true : false}
               errorMessage={actionData?.errors?.email}
             />
@@ -65,7 +72,10 @@ export default function SetupProfile() {
               label="Phone"
               type="tel"
               variant="underlined"
+              color="success"
               className="font-nunito"
+              isInvalid={actionData?.errors?.phone ? true : false}
+              errorMessage={actionData?.errors?.phone}
             />
           </div>
 
@@ -75,6 +85,7 @@ export default function SetupProfile() {
               label="Password"
               type="password"
               required
+              color="success"
               variant="underlined"
               className="font-nunito"
               isInvalid={actionData?.errors?.password ? true : false}
@@ -85,8 +96,11 @@ export default function SetupProfile() {
               label="Confirm Password"
               type="password"
               required
+              color="success"
               variant="underlined"
               className="font-nunito"
+              isInvalid={actionData?.errors?.confirmPassword ? true : false}
+              errorMessage={actionData?.errors?.confirmPassword}
             />
           </div>
         </div>

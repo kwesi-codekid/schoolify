@@ -8,7 +8,7 @@ import { useLottie } from "lottie-react";
 import congratulationLottie from "~/assets/lotties/handshake.json";
 
 export default function Congratulation() {
-  //   const { admin, connectionInfo } = useLoaderData();
+  const { admin, connectionInfo } = useLoaderData();
 
   const { View } = useLottie({
     animationData: congratulationLottie,
@@ -36,11 +36,11 @@ export default function Congratulation() {
           your dashboard is ready. This can take up to 24 hours
         </p>
 
-        {/* <p className="text-center text-base font-medium">
+        <p className="text-center text-base font-medium">
           You can access your site at :{" "}
           <span className="text-purple-600">{connectionInfo.domain}</span>,{" "}
           after the propergation
-        </p> */}
+        </p>
         <Link
           to="/"
           className="inline-block px-4 py-2 mt-11 mx-auto text-white font-semibold rounded-xl shadow-md hover:shadow-sm hover:shadow-black/70 hover:bg-primary/90 bg-gradient-to-tr from-purple-700 to-orange-600 transition-all duration-300"
