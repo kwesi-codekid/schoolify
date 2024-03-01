@@ -24,6 +24,7 @@ import ConfirmModal from "./ConfirmModal";
 import CreateRecordModal from "./CreateRecordModal";
 import EditRecordModal from "./EditRecordModal";
 import { useNavigate, Form } from "@remix-run/react";
+import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
 
 interface Column {
   key: string;
@@ -196,10 +197,10 @@ const CustomTable: React.FC<CustomTableProps> = ({
           ) : null
         }
       >
-        <TableHeader>
+        <TableHeader className="!bg-blue-500">
           {columns.map((column) => (
             <TableColumn
-              className="font-montserrat"
+              className="font-montserrat bg-slate-900"
               key={column.key}
               allowsSorting
             >
@@ -211,6 +212,12 @@ const CustomTable: React.FC<CustomTableProps> = ({
           items={list.items}
           isLoading={isLoading}
           loadingContent={<Spinner label="Loading..." />}
+          emptyContent={
+            <div className="flex items-center justify-center flex-col gap-3">
+              <img src={emptyFolderSVG} alt="No data" />
+              <p className="font-nunito text-lg md:text-xl">No records found</p>
+            </div>
+          }
         >
           {(item: any) => (
             <TableRow key={item._id}>
