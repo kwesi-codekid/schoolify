@@ -10,9 +10,11 @@ import { Moon } from "~/assets/icons/Moon";
 export function ThemeSwitcher({
   text,
   btnSize,
+  classNames,
 }: {
   text?: string;
   btnSize?: "sm" | "md" | "lg";
+  classNames?: string;
 }) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -24,7 +26,7 @@ export function ThemeSwitcher({
   if (!mounted) return null;
 
   return (
-    <div className="flex items-center gap-1">
+    <div className={`flex items-center gap-1 ${classNames}`}>
       <Button
         size={btnSize ? btnSize : "sm"}
         isIconOnly
