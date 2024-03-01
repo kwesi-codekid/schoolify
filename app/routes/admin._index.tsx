@@ -1,5 +1,5 @@
 import { LoaderFunction, MetaFunction } from "@remix-run/node";
-import AdminController from "~/controllers/AdminController.server";
+import AdminController from "~/controllers/AdminController";
 import AdminLayout from "~/layouts/AdminLayout";
 
 const AdminDashboard = () => {

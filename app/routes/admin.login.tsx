@@ -16,7 +16,7 @@ import { EyeSlashFilledIcon } from "~/assets/icons/EyeSlashFilled";
 import { Form, useActionData } from "@remix-run/react";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "~/validators";
-import AdminController from "~/controllers/AdminController.server";
+import AdminController from "~/controllers/AdminController";
 
 const Login = () => {
   const actionData = useActionData();
