@@ -194,6 +194,8 @@ export default class StudentController {
         },
       });
     } catch (error) {
+      console.log(error);
+
       session.flash("message", {
         title: "Error Adding Student",
         status: "error",
