@@ -1,4 +1,4 @@
-import { connectToDomainDatabase } from "../mongoose.server";
+import { connectToDomainDatabase } from "../mongoose";
 
 export default class PermissionController {
   private request: Request;

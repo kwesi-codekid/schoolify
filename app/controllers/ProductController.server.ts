@@ -1,6 +1,6 @@
 import { json, redirect } from "@remix-run/node";
 import { connectToDomainDatabase } from "../mongoose.server";
-import AdminController from "./AdminController.server";
+import AdminController from "./AdminController";
 import EmployeeAuthController from "./EmployeeAuthController";
 import { commitFlashSession, getFlashSession } from "~/flash-session";
 

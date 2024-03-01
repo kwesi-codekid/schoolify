@@ -5,7 +5,7 @@ import {
   type SessionStorage,
 } from "@remix-run/node";
 import { connectToDomainDatabase } from "~/mongoose";
-import AdminController from "~/controllers/AdminController.server";
+import AdminController from "~/controllers/AdminController";
 
 export default class FeatureController {
   private request: Request;

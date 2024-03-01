@@ -405,7 +405,7 @@ export default class ClientSetupController {
               password: adminDetails.password,
             });
 
-            await Permission.create(permissions);
+            // await Permission.create(permissions);
 
             if (admin) {
               await this.ClientDetail.findOneAndUpdate(
@@ -413,6 +413,11 @@ export default class ClientSetupController {
                 { propagated: true }
               );
             }
+          } else {
+            await this.ClientDetail.findOneAndUpdate(
+              { _id: connection.admin._id },
+              { propagated: true }
+            );
           }
 
           // const senderController = await new SenderController(this.request);
