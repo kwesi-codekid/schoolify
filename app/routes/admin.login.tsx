@@ -15,6 +15,8 @@ import { EyeSlashFilledIcon } from "~/assets/icons/EyeSlashFilled";
 // import { validateEmail, validatePassword } from "~/validators";
 import { Form, useActionData } from "@remix-run/react";
 import { useState } from "react";
+import { validateEmail, validatePassword } from "~/validators";
+import AdminController from "~/controllers/AdminController.server";
 
 const Login = () => {
   const actionData = useActionData();
@@ -140,28 +142,28 @@ const Login = () => {
 
 export default Login;
 
-// export const action: ActionFunction = async ({ request }) => {
-//   const formData = await request.formData();
-//   const email = formData.get("email") as string;
-//   const password = formData.get("password") as string;
+export const action: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-//   const errors = {
-//     email: validateEmail(email),
-//     password: validatePassword(password),
-//   };
+  const errors = {
+    email: validateEmail(email),
+    password: validatePassword(password),
+  };
 
-//   if (Object.values(errors).some(Boolean)) {
-//     return json({ errors }, { status: 400 });
-//   }
+  if (Object.values(errors).some(Boolean)) {
+    return json({ errors }, { status: 400 });
+  }
 
-//   const adminController = await new AdminController(request);
-//   return await adminController.loginAdmin({ email, password });
-// };
+  const adminController = await new AdminController(request);
+  return await adminController.loginAdmin({ email, password });
+};
 
-// export const loader: LoaderFunction = async ({ request }) => {
-//   const adminController = await new AdminController(request);
-//   return (await adminController.getAdminId()) ? redirect("/admin") : null;
-// };
+export const loader: LoaderFunction = async ({ request }) => {
+  const adminController = await new AdminController(request);
+  return (await adminController.getAdminId()) ? redirect("/admin") : null;
+};
 
 export const meta: MetaFunction = () => {
   return [

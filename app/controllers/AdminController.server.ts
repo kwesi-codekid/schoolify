@@ -5,9 +5,10 @@ import {
   type SessionStorage,
 } from "@remix-run/node";
 import bcrypt from "bcryptjs";
-import { connectToDomainDatabase } from "../mongoose.server";
+import { connectToDomainDatabase } from "~/mongoose";
 import { type ObjectId } from "mongoose";
 import { commitSession, getSession } from "~/auth-session";
+import { commitFlashSession, getFlashSession } from "~/flash-session";
 
 export default class AdminController {
   private request: Request;
@@ -108,6 +109,50 @@ export default class AdminController {
     }
   }
 
+  public async requireAdminId(
+    redirectTo: string = new URL(this.request.url).pathname
+  ) {
+    const session = await this.getAdminSession();
+
+    const adminId = session.get("adminId");
+    if (!adminId || typeof adminId !== "string") {
+      const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+      throw redirect(`/admin/login?${searchParams}`);
+    }
+
+    return adminId;
+  }
+
+  public async getAdmin() {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+
+    const adminId = await this.requireAdminId();
+
+    try {
+      const admin = await this.Admin.findById(adminId).select("-password");
+
+      // if (!admin) {
+      //   throw this.logout();
+      // }
+
+      if (!admin) {
+        session.flash("message", {
+          title: "No Account!",
+          status: "error",
+        });
+        return redirect(`/admin/login`, {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+
+      return admin;
+    } catch {
+      throw this.logout();
+    }
+  }
+
   public async loginAdmin({
     email,
     password,
@@ -116,14 +161,21 @@ export default class AdminController {
     password: string;
   }) {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-    const admin = await this.Admin.findOne({ email });
+
+    const admin = await this.Admin.findOne({
+      email,
+    });
+
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    // console.log(hashedPassword);
+    // console.log(admin);
 
     if (!admin) {
       session.flash("message", {
-        title: "No account associated with this Email",
+        title: "No Account with email!",
         status: "error",
       });
-      return redirect(`/console/login`, {
+      return redirect(`/admin/login`, {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
@@ -134,48 +186,177 @@ export default class AdminController {
 
     if (!valid) {
       session.flash("message", {
-        title: "Invalid Password",
+        title: "Invalid Credentials",
         status: "error",
       });
-      return redirect(`/console/login`, {
+      return redirect(`/admin/login`, {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
       });
     }
 
-    return this.createAdminSession(admin._id, "/console");
+    return this.createAdminSession(admin.id, "/admin");
   }
+
+  public updateProfile = async ({
+    firstName,
+    lastName,
+    email,
+  }: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => {
+    const userId = await this.getAdminId();
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+
+    try {
+      const user = await this.Admin.findByIdAndUpdate(
+        userId,
+        {
+          firstName,
+          lastName,
+          email,
+        },
+        {
+          new: true,
+        }
+      );
+      session.flash("message", {
+        title: "Profile Updated",
+        status: "success",
+      });
+      return redirect(`/admin/profile`, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    } catch (error) {
+      session.flash("message", {
+        title: "Error Updating Profile!",
+        status: "error",
+      });
+      return redirect(`/admin/profile`, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    }
+  };
+
+  public changePassword = async ({
+    currentPassword,
+    password,
+  }: {
+    currentPassword: string;
+    password: string;
+  }) => {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+    const userId = await this.getAdminId();
+    const admin = await this.Admin.findById(userId);
+
+    if (admin) {
+      const valid = await bcrypt.compare(currentPassword, admin.password);
+
+      if (!valid) {
+        session.flash("message", {
+          title: "Incorrect Password!",
+          status: "error",
+        });
+        return redirect(`/admin/profile`, {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await this.Admin.findByIdAndUpdate(admin._id, {
+        password: hashedPassword,
+      });
+      session.flash("message", {
+        title: "Password Changed",
+        status: "success",
+      });
+      return redirect(`/admin/profile`, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    } else {
+      session.flash("message", {
+        title: "User does not exist!",
+        status: "error",
+      });
+      return redirect(`/admin/profile`, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    }
+  };
 
   public async logout() {
     const session = await this.getAdminSession();
 
-    return redirect("/console/login", {
+    return redirect("/admin/login", {
       headers: {
         "Set-Cookie": await this.storage.destroySession(session),
       },
     });
   }
 
-  public async requireAdminId(
-    redirectTo: string = new URL(this.request.url).pathname
-  ) {
-    const session = await this.getAdminSession();
+  public createAdmin = async ({
+    path,
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+  }: {
+    path: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    role: string;
+  }) => {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
 
-    const adminId = session.get("adminId");
-    if (!adminId || typeof adminId !== "string") {
-      const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-      throw redirect(`/console/login?${searchParams}`);
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const admin = await this.Admin.create({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        role,
+      });
+
+      session.flash("message", {
+        title: "Admin Created",
+        status: "success",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    } catch (error) {
+      session.flash("message", {
+        title: "Error Creating Admin!",
+        status: "error",
+        description: error.message,
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
     }
+  };
 
-    return adminId;
-  }
-
-  /**
-   * Get all admins
-   * @param param0 page: number
-   * @returns Admins: Array, totalPages: number
-   */
   public getAdmins = async ({
     page,
     search_term,
@@ -183,44 +364,27 @@ export default class AdminController {
     page: number;
     search_term: string;
   }) => {
-    try {
-      const limit = 10;
-      const skipCount = (page - 1) * limit;
-      const searchFilter = search_term
-        ? {
-            $or: [
-              {
-                firstName: {
-                  $regex: new RegExp(
-                    search_term
-                      .split(" ")
-                      .map((term) => `(?=.*${term})`)
-                      .join(""),
-                    "i"
-                  ),
-                },
-              },
-              {
-                email: {
-                  $regex: new RegExp(
-                    search_term
-                      .split(" ")
-                      .map((term) => `(?=.*${term})`)
-                      .join(""),
-                    "i"
-                  ),
-                },
-              },
-            ],
-          }
-        : {};
+    const limit = 10; // Number of orders per page
+    const skipCount = (page - 1) * limit; // Calculate the number of documents to skip
 
+    const searchFilter = search_term
+      ? {
+          $or: [
+            { name: { $regex: search_term, $options: "i" } }, // Case-insensitive search for email
+            { description: { $regex: search_term, $options: "i" } }, // Case-insensitive search for username
+          ],
+        }
+      : {};
+
+    const totalEmployeeCount = await this.Admin.countDocuments({}).exec();
+    const totalPages = Math.ceil(totalEmployeeCount / limit);
+
+    try {
       const admins = await this.Admin.find(searchFilter)
+        .populate("role")
         .skip(skipCount)
         .limit(limit)
         .exec();
-      const totalAdminCount = await this.Admin.countDocuments({}).exec();
-      const totalPages = Math.ceil(totalAdminCount / limit);
 
       return { admins, totalPages };
     } catch (error) {
@@ -228,210 +392,179 @@ export default class AdminController {
     }
   };
 
-  /**
-   * create an admin
-   * @param param0 firstNmae
-   * @returns
-   */
-  public createAdmin = async ({
-    firstName,
-    middleName,
-    lastName,
-    email,
-    username,
-    password,
-    role,
-    gender,
+  public deleteAdmin = async ({
+    adminId,
+    path,
   }: {
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    email: string;
-    username: string;
-    password: string;
-    role: string;
-    gender: string;
+    adminId: string;
+    path: string;
   }) => {
-    const existingAdmin = await this.Admin.findOne({ username });
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
 
-    if (existingAdmin) {
-      return json(
-        {
-          errors: { name: "Admin already exists" },
-          fields: { firstName, lastName, middleName, username, email },
+    try {
+      await this.Admin.findByIdAndDelete(adminId);
+      session.flash("message", {
+        title: "Admin Deleted",
+        status: "success",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
         },
-        { status: 400 }
-      );
-    }
-
-    // const myString = imgSrc;
-    // const myArray = myString.split("|");
-    // let image = await AdminImages.create({
-    //   url: myArray[0],
-    //   imageId: myArray[1],
-    // });
-
-    // create new admin
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const admin = await this.Admin.create({
-      firstName,
-      middleName,
-      lastName,
-      email,
-      username,
-      password: hashedPassword,
-      role,
-      gender,
-    });
-
-    if (!admin) {
-      return json(
-        {
-          error: "Error creating admin",
-          fields: { firstName, lastName, middleName, username, email },
+      });
+    } catch (error) {
+      session.flash("message", {
+        title: "Error Deleting Admin!",
+        status: "error",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
         },
-        { status: 400 }
-      );
+      });
     }
-    return redirect("/console/users/admins", 200);
   };
 
-  /**
-   * get a single admin
-   * @param param0
-   * @returns
-   */
-  public getAdmin = async (id: string) => {
-    const admin = await this.Admin.findById(id);
-    return admin;
-  };
-
-  /**
-   * Update admin
-   * @param param0
-   */
-  public updateAdmin = async ({
+  public updateAdminProfile = async ({
+    adminId,
+    path,
     firstName,
-    middleName,
     lastName,
     email,
-    username,
     role,
-    gender,
-    _id,
   }: {
+    adminId: string;
+    path: string;
     firstName: string;
-    middleName: string;
     lastName: string;
     email: string;
-    username: string;
     role: string;
-    gender: string;
-    _id: string;
   }) => {
-    // try {
-    await this.Admin.findOneAndUpdate(
-      { _id },
-      {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+
+    try {
+      await this.Admin.findByIdAndUpdate(adminId, {
         firstName,
-        middleName,
         lastName,
         email,
-        username,
         role,
-        gender,
-      }
-    );
-    return redirect(`/console/users/admins`, 200);
-    // } catch (error) {
-    //   return json(
-    //     {
-    //       errors: {
-    //         name: "Error occured while updating product category",
-    //         error: error,
-    //       },
-    //       fields: {
-    //         firstName,
-    //         middleName,
-    //         lastName,
-    //         email,
-    //         username,
-    //         role,
-    //         gender,
-    //       },
-    //     },
-    //     { status: 400 }
-    //   );
-    // }
+      });
+      session.flash("message", {
+        title: "Admin Updated",
+        status: "success",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    } catch (error) {
+      console.log(error);
+
+      session.flash("message", {
+        title: "Error Updating Admin!",
+        status: "error",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    }
   };
 
-  public deleteAdmin = async (id: string) => {
-    await this.Admin.findByIdAndDelete(id);
-    return json({ message: "Admin deleted successfully" }, { status: 200 });
+  public resetPassword = async ({
+    adminId,
+    path,
+    password,
+  }: {
+    adminId: string;
+    path: string;
+    password: string;
+  }) => {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await this.Admin.findByIdAndUpdate(adminId, {
+        password: hashedPassword,
+      });
+      session.flash("message", {
+        title: "Password Reset",
+        status: "success",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    } catch (error) {
+      session.flash("message", {
+        title: "Error Resetting Password!",
+        status: "error",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+    }
+  };
+
+  public canPerformAction = async (action: string): Promise<any> => {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+    const admin = await this.getAdmin();
+
+    try {
+      // Assuming admin has a role associated with it
+      const role = await Role.findById(admin.role).populate("permissions");
+
+      if (!role) {
+        session.flash("message", {
+          title: "No role Assigned!",
+          status: "error",
+        });
+        return redirect("/", {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+
+      // Check if the role has the necessary permission
+      const canPerform = role.permissions.some(
+        (permission) => permission.action === action
+      );
+
+      if (!canPerform) {
+        return false;
+        console.log(canPerform);
+        session.flash("message", {
+          title: "Permission Denied!",
+          status: "error",
+        });
+        return redirect(`/admin`, {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+      console.log("can perform", canPerform);
+
+      return true;
+    } catch (error) {
+      session.flash("message", {
+        title: "Permission Denied!",
+        status: "error",
+      });
+      return redirect(`/`, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
+        },
+      });
+
+      console.error("Error checking permission:", error);
+      return false;
+    }
   };
 }
-
-// export const changePassword = async (
-//   adminId: string,
-//   password: string,
-//   request: Request
-// ) => {
-//   let domain = (request.headers.get("host") as string).split(":")[0];
-
-//   const clientDb = await connectToDomainDatabase(domain);
-//   const Admin = clientDb.model("admins", AdminSchema);
-
-//   const hashedPassword = await bcrypt.hash(password, 10);
-
-//   let admin = await Admin.updateOne(
-//     { _id: adminId },
-//     { password: hashedPassword },
-//     { new: true }
-//   );
-
-//   return admin;
-// };
-
-// export const requirePermission = async ({
-//   request,
-//   action,
-// }: {
-//   request: Request;
-//   action: string;
-// }) => {
-//   let domain = (request.headers.get("host") as string).split(":")[0];
-//   const clientDb = await connectToDomainDatabase(domain);
-//   const Admin = clientDb.model("admins", AdminSchema);
-
-//   const adminId = await requireAdminId(request);
-
-//   if (typeof adminId !== "string") {
-//     return null;
-//   }
-
-//   try {
-//     const admin: AdminInterface = await Admin.findById(adminId).select(
-//       "id email username role permissions"
-//     );
-
-//     // filter permissions to check if there is any match for the action
-//     const hasPermission = admin.permissions.filter((permission) => {
-//       return permission.action === action;
-//     });
-
-//     if (hasPermission.length === 0) {
-//       return json(
-//         {
-//           message: `Unauthorized: You can not perform ${action}`,
-//           type: "error",
-//         },
-//         { status: 401 }
-//       );
-//     }
-
-//     return admin;
-//   } catch {
-//     throw logout(request);
-//   }
-// };
