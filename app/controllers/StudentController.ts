@@ -130,7 +130,7 @@ export default class StudentController {
     firstName,
     lastName,
     gender,
-    dataOfBirth,
+    dob,
     studentClass,
     address,
   }: {
@@ -138,42 +138,66 @@ export default class StudentController {
     firstName: string;
     lastName: string;
     gender: string;
-    dataOfBirth: string;
+    dob: string;
     studentClass: string;
     address: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
     const adminController = await new AdminController(this.request);
 
-    const existingStudent = await this.Student.findOne({ firstName, lastName });
-    // const settingsController = await new SettingsController(this.request);
-    // const generalSettings = await settingsController.getGeneralSettings();
+    try {
+      const existingStudent = await this.Student.findOne({
+        firstName,
+        lastName,
+      });
 
-    if (existingStudent) {
+      if (existingStudent) {
+        session.flash("message", {
+          title: "Student already exists",
+          status: "error",
+        });
+        return redirect(path, {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+
+      const branch = await this.Student.create({
+        firstName,
+        lastName,
+        gender,
+        dob,
+        class: studentClass,
+        address,
+      });
+
+      if (!branch) {
+        session.flash("message", {
+          title: "Error Adding Student",
+          status: "error",
+        });
+        return redirect(path, {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+
       session.flash("message", {
-        title: "Student already exists",
-        status: "error",
+        title: "Student Added Successful",
+        status: "success",
       });
       return redirect(path, {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
       });
-    }
-
-    const branch = await this.Student.create({
-      firstName,
-      lastName,
-      gender,
-      dataOfBirth,
-      studentClass,
-      address,
-    });
-
-    if (!branch) {
+    } catch (error) {
       session.flash("message", {
         title: "Error Adding Student",
         status: "error",
+        description: error.message,
       });
       return redirect(path, {
         headers: {
@@ -181,16 +205,6 @@ export default class StudentController {
         },
       });
     }
-
-    session.flash("message", {
-      title: "Student Added Successful",
-      status: "success",
-    });
-    return redirect(path, {
-      headers: {
-        "Set-Cookie": await commitFlashSession(session),
-      },
-    });
   };
 
   /**
@@ -233,56 +247,32 @@ export default class StudentController {
   public updateStudent = async ({
     path,
     _id,
-    name,
+    firstName,
+    lastName,
     gender,
-    church,
-    denomination,
-    appointingOfficer,
-    location,
-    region,
-    designation,
-    dateOfAppointment,
-    source,
-    dateOfGazette,
-    gazetteNumber,
-    pageNumber,
-    attachGazette,
+    dob,
+    studentClass,
+    address,
   }: {
     path: string;
     _id: string;
-    name: string;
-    church: string;
-    denomination: string;
-    appointingOfficer: string;
-    location: string;
+    firstName: string;
+    lastName: string;
     gender: string;
-    region: string;
-    designation: string;
-    dateOfAppointment: string;
-    source: string;
-    dateOfGazette: string;
-    gazetteNumber: string;
-    pageNumber: string;
-    attachGazette: string;
+    dob: string;
+    studentClass: string;
+    address: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
     try {
       await this.Student.findByIdAndUpdate(_id, {
-        name,
+        firstName,
+        lastName,
         gender,
-        church,
-        denomination,
-        appointingOfficer,
-        location,
-        region,
-        designation,
-        dateOfAppointment,
-        source,
-        dateOfGazette,
-        gazetteNumber,
-        pageNumber,
-        attachGazette,
+        dob,
+        class: studentClass,
+        address,
       });
 
       session.flash("message", {

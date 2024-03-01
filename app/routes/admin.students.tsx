@@ -182,7 +182,7 @@ export const action: ActionFunction = async ({ request }) => {
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
   const gender = formData.get("gender") as string;
-  const dataOfBirth = formData.get("dataOfBirth") as string;
+  const dob = formData.get("dob") as string;
   const studentClass = formData.get("class") as string;
   const address = formData.get("address") as string;
 
@@ -195,23 +195,23 @@ export const action: ActionFunction = async ({ request }) => {
       firstName,
       lastName,
       gender,
-      dataOfBirth,
+      dob,
       studentClass,
       address,
     });
   } else if (intent == "update") {
-    return await studentController.updateVenue({
+    return await studentController.updateStudent({
       _id,
       path,
       firstName,
       lastName,
       gender,
-      dataOfBirth,
+      dob,
       studentClass,
       address,
     });
   } else if (intent == "delete") {
-    return await studentController.deleteVenue({ _id, path });
+    return await studentController.deleteStudent({ _id, path });
   } else {
     return true;
   }

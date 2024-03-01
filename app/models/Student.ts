@@ -23,6 +23,13 @@ const StudentSchema = new mongoose.Schema(
       required: true,
       enum: ["active", "inactive"],
     },
+    dob: {
+      type: Date,
+      required: true,
+    },
+    address: {
+      type: String,
+    },
     fees: [
       {
         type: mongoose.Schema.Types.ObjectId,
