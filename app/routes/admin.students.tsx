@@ -4,7 +4,7 @@ import CustomSelect from "~/components/custom/CustomSelect";
 import CustomDatePicker from "~/components/custom/CustomDatepicker";
 
 import AdminLayout from "~/layouts/AdminLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
@@ -14,37 +14,28 @@ const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
   console.log(students);
 
-  const items = [
-    // {
-    //   id: 1,
-    //   name: "John Doe",
-    //   email: "jdoe@gmail.com",
-    //   phone: "1234567890",
-    //   class: "Class 1",
-    //   section: "A",
-    // },
-  ];
+  const [studentData, setStudentData] = useState(students);
+
+  useEffect(() => {
+    setStudentData(students);
+  }, [students]);
 
   const columns = [
     {
-      key: "name",
-      name: "Name",
+      key: "firstName",
+      name: "First Name",
     },
     {
-      key: "email",
-      name: "Email",
+      key: "lastName",
+      name: "Last Name",
     },
     {
-      key: "phone",
-      name: "Phone",
+      key: "gender",
+      name: "Gender",
     },
     {
       key: "class",
       name: "Class",
-    },
-    {
-      key: "section",
-      name: "Section",
     },
     {
       key: "actions",
@@ -158,7 +149,7 @@ const AdminStudentsManagement = () => {
     <AdminLayout pageTitle="Student Management">
       <section className="p-4 backdrop-blur-[1px]">
         <CustomTable
-          items={students}
+          items={studentData}
           totalPages={totalPages}
           columns={columns}
           addButtonText="Register Student"

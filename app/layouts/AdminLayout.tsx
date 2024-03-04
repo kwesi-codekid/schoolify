@@ -256,7 +256,11 @@ const AdminLayout = ({
                     key={index}
                     className="w-full"
                   >
-                    <AccordionItem key={index} title={link.label}>
+                    <AccordionItem
+                      key={index}
+                      title={link.label}
+                      startContent={link.icon}
+                    >
                       {link.children.map((child, index) => (
                         <Link
                           key={index}
@@ -331,7 +335,11 @@ const AdminLayout = ({
                       key={index}
                       className="w-full"
                     >
-                      <AccordionItem key={index} title={link.label}>
+                      <AccordionItem
+                        key={index}
+                        title={link.label}
+                        startContent={link.icon}
+                      >
                         {link.children.map((child, index) => (
                           <Link
                             key={index}
