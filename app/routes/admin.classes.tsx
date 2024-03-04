@@ -9,10 +9,11 @@ import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
+import ClassController from "~/controllers/ClassController";
 
 const AdminClassesManagement = () => {
-  const { students, totalPages, search_term, user, page } = useLoaderData();
-  console.log(students);
+  const { classes, totalPages, search_term, user, page } = useLoaderData();
+  console.log(classes);
 
   const items = [
     // {
@@ -75,7 +76,7 @@ const AdminClassesManagement = () => {
     <AdminLayout pageTitle="Classes Management">
       <section className="p-4 backdrop-blur-[1px]">
         <CustomTable
-          items={students}
+          items={classes}
           totalPages={totalPages}
           columns={columns}
           addButtonText="New Class"
@@ -97,39 +98,30 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData();
   const _id = formData.get("_id") as string;
-  const firstName = formData.get("firstName") as string;
-  const lastName = formData.get("lastName") as string;
-  const gender = formData.get("gender") as string;
-  const dob = formData.get("dob") as string;
-  const studentClass = formData.get("class") as string;
-  const address = formData.get("address") as string;
+  const className = formData.get("className") as string;
+  const classTeacher = formData.get("classTeacher") as string;
+  const description = formData.get("description") as string;
 
   const intent = formData.get("intent") as string;
-  const studentController = await new StudentController(request);
+  const classController = await new ClassController(request);
 
   if (intent == "create") {
-    return await studentController.createStudent({
+    return await classController.createStudentClass({
       path,
-      firstName,
-      lastName,
-      gender,
-      dob,
-      studentClass,
-      address,
+      name: className,
+      teacher: classTeacher,
+      description,
     });
   } else if (intent == "update") {
-    return await studentController.updateStudent({
+    return await classController.updateStudentClass({
       _id,
       path,
-      firstName,
-      lastName,
-      gender,
-      dob,
-      studentClass,
-      address,
+      name: className,
+      teacher: classTeacher,
+      description,
     });
   } else if (intent == "delete") {
-    return await studentController.deleteStudent({ _id, path });
+    return await classController.deleteStudentClass({ _id, path });
   } else {
     return true;
   }
@@ -149,16 +141,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   const page = parseInt(url.searchParams.get("page") as string) || 1;
   const search_term = url.searchParams.get("search_term") as string;
   const status = url.searchParams.get("order_status") as string;
-  const from = url.searchParams.get("from") as string;
-  const to = url.searchParams.get("to") as string;
 
-  const studentController = await new StudentController(request);
-  const { students, totalPages } = await studentController.getStudents({
+  const classController = await new ClassController(request);
+  const { classes, totalPages } = await classController.getStudentClasss({
     page,
     search_term,
   });
 
-  return { students, totalPages, search_term, user, page };
+  return { classes, totalPages, search_term, user, page };
 };
 
 export const meta: MetaFunction = () => {
