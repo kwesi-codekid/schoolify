@@ -14,11 +14,13 @@ const CreateRecordModal = ({
   isModalOpen,
   onCloseModal,
   title,
+  size,
   children,
 }: {
   isModalOpen: boolean;
   onCloseModal: () => void;
   title: string;
+  size?: string;
   children: React.ReactNode;
 }) => {
   // state to handle loading
@@ -67,7 +69,7 @@ const CreateRecordModal = ({
       isOpen={isModalOpen}
       onClose={onCloseModal}
       className="dark:bg-slate-900 border-[1px] dark:border-slate-700/20 w-full md:w-1/2 lg:w-2/3"
-      size="5xl"
+      size={size}
       motionProps={{
         variants: {
           enter: {

@@ -40,6 +40,7 @@ interface CustomTableProps {
   columns: Column[];
   addButtonText: string;
   createRecordFormItems?: React.ReactNode;
+  createRecordModalSize?: "";
   editRecordFormItems?: React.ReactNode;
   editRecord: any;
   setEditRecord: (record: any) => void;
@@ -53,6 +54,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
   columns,
   addButtonText,
   createRecordFormItems,
+  createRecordModalSize = "5xl",
   editRecordFormItems,
   editRecord,
   setEditRecord,
@@ -284,6 +286,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
         title="Create Record"
         isModalOpen={createRecordDisclosure.isOpen}
         onCloseModal={createRecordDisclosure.onClose}
+        size={createRecordModalSize}
       >
         {createRecordFormItems}
       </CreateRecordModal>
