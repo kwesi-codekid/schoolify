@@ -13,7 +13,6 @@ import { commitFlashSession, getFlashSession } from "~/flash-session";
 export default class AdminController {
   private request: Request;
   private domain: string;
-  private session: any;
   private Admin: any;
   private storage: SessionStorage;
   private connectionDetails: {
@@ -124,32 +123,18 @@ export default class AdminController {
   }
 
   public async getAdmin() {
-    const session = await getFlashSession(this.request.headers.get("Cookie"));
-
     const adminId = await this.requireAdminId();
 
     try {
       const admin = await this.Admin.findById(adminId).select("-password");
 
-      // if (!admin) {
-      //   throw this.logout();
-      // }
-
       if (!admin) {
-        session.flash("message", {
-          title: "No Account!",
-          status: "error",
-        });
-        return redirect(`/admin/login`, {
-          headers: {
-            "Set-Cookie": await commitFlashSession(session),
-          },
-        });
+        return this.logout();
       }
 
       return admin;
     } catch {
-      throw this.logout();
+      return this.logout();
     }
   }
 
@@ -161,7 +146,6 @@ export default class AdminController {
     password: string;
   }) {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-
     const admin = await this.Admin.findOne({
       email,
     });

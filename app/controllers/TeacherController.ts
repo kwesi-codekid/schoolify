@@ -1,5 +1,6 @@
 import {
   createCookieSessionStorage,
+  json,
   redirect,
   type SessionStorage,
 } from "@remix-run/node";
@@ -10,8 +11,7 @@ import { commitFlashSession, getFlashSession } from "~/flash-session";
 export default class TeacherController {
   private request: Request;
   private domain: string;
-  private session: any;
-  private Employee: any;
+  private Teacher: any;
   private storage: SessionStorage;
 
   constructor(request: Request) {
@@ -40,13 +40,13 @@ export default class TeacherController {
   }
 
   private async initializeModels() {
-    const { Employee } = await connectToDomainDatabase(this.domain);
-    this.Employee = Employee;
+    const { Teacher } = await connectToDomainDatabase(this.domain);
+    this.Teacher = Teacher;
   }
 
-  private async createEmployeeSession(employeeId: string, redirectTo: string) {
+  private async createTeacherSession(teacherId: string, redirectTo: string) {
     const session = await this.storage.getSession();
-    session.set("employeeId", employeeId);
+    session.set("teacherId", teacherId);
 
     return redirect(redirectTo, {
       headers: {
@@ -55,11 +55,21 @@ export default class TeacherController {
     });
   }
 
-  private async getEmployeeSession() {
+  private async getTeacherSession() {
     return this.storage.getSession(this.request.headers.get("Cookie"));
   }
 
-  public async loginEmployee({
+  public async getTeacherId() {
+    const session = await this.getTeacherSession();
+    const teacherId = session.get("teacherId");
+    if (!teacherId || typeof teacherId !== "string") {
+      return null;
+    }
+
+    return teacherId;
+  }
+
+  public async loginTeacher({
     email,
     password,
   }: {
@@ -67,28 +77,28 @@ export default class TeacherController {
     password: string;
   }) {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-    const employee = await this.Employee.findOne({ email });
+    const teacher = await this.Teacher.findOne({ email });
 
-    if (!employee) {
+    if (!teacher) {
       session.flash("message", {
-        title: "No Employee Found",
+        title: "No Teacher Found",
         status: "error",
       });
-      return redirect(`/pos/login`, {
+      return redirect(`/teacher/login`, {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
       });
     }
 
-    const valid = await bcrypt.compare(password, employee.password);
+    const valid = await bcrypt.compare(password, teacher.password);
 
     if (!valid) {
       session.flash("message", {
         title: "Invalid Password",
         status: "error",
       });
-      return redirect(`/pos/login`, {
+      return redirect(`/teacher/login`, {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
@@ -97,171 +107,153 @@ export default class TeacherController {
 
     // const logController = await new LogController();
     // await logController.create({
-    //   employee: employee?._id,
+    //   teacher: teacher?._id,
     //   action: "login",
     // });
 
-    return this.createEmployeeSession(employee._id, "/pos");
+    return this.createTeacherSession(teacher._id, "/teacher");
   }
 
-  public async requireEmployeeId(
+  public async requireTeacherId(
     redirectTo: string = new URL(this.request.url).pathname
   ) {
-    const session = await this.getEmployeeSession();
+    const session = await this.getTeacherSession();
 
-    const employeeId = session.get("employeeId");
-    if (!employeeId || typeof employeeId !== "string") {
+    const teacherId = session.get("teacherId");
+    if (!teacherId || typeof teacherId !== "string") {
       const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-      throw redirect(`/pos/login?${searchParams}`);
+      throw redirect(`/teacher/login?${searchParams}`);
     }
 
-    return employeeId;
+    return teacherId;
   }
 
-  public async getEmployeeId() {
-    const session = await this.getEmployeeSession();
-    const employeeId = session.get("employeeId");
-    if (!employeeId || typeof employeeId !== "string") {
-      return null;
-    }
-
-    return employeeId;
-  }
-
-  public async getEmployee() {
-    const employeeId = await this.getEmployeeId();
-    if (typeof employeeId !== "string") {
-      return null;
-    }
+  public async getTeacher() {
+    const teacherId = await this.getTeacherId();
 
     try {
-      const employee = await this.Employee.findById(employeeId).select(
+      const teacher = await this.Teacher.findById(teacherId).select(
         "-password"
       );
-      return employee;
+
+      if (!teacher) {
+        return this.logout();
+      }
+
+      return teacher;
     } catch {
-      throw this.logout();
+      return this.logout();
     }
   }
 
   public async logout() {
-    const id = await this.getEmployeeId();
+    const id = await this.getTeacherId();
     // const logController = await new LogController();
     // await logController.create({
-    //   employee: id as string,
+    //   teacher: id as string,
     //   action: "logout",
     // });
 
-    const session = await this.getEmployeeSession();
+    const session = await this.getTeacherSession();
 
-    return redirect("/pos/login", {
+    return redirect("/teacher/login", {
       headers: {
         "Set-Cookie": await this.storage.destroySession(session),
       },
     });
   }
 
-  public getEmployees = async ({ page }: { page: number }) => {
+  public getTeachers = async ({ page }: { page: number }) => {
     const limit = 10;
     const skipCount = (page - 1) * limit;
 
-    const totalEmployeeCount = await this.Employee.countDocuments({}).exec();
-    const totalPages = Math.ceil(totalEmployeeCount / limit);
+    const totalTeacherCount = await this.Teacher.countDocuments({}).exec();
+    const totalPages = Math.ceil(totalTeacherCount / limit);
 
     try {
-      const employees = await this.Employee.find({})
+      const teachers = await this.Teacher.find({})
         .skip(skipCount)
         .limit(limit)
         .exec();
 
-      return { employees, totalPages };
+      return { teachers, totalPages };
     } catch (error) {
-      console.error("Error retrieving employees:", error);
+      console.error("Error retrieving teachers:", error);
     }
   };
 
   /**
-   * create an employee
+   * create an teacher
    * @param param0 firstNmae
    *
    * @returns
    */
-  public createEmployee = async ({
+  public createTeacher = async ({
     firstName,
-    middleName,
     lastName,
     email,
-    username,
     password,
     role,
     gender,
+    phoneNumber,
   }: {
     firstName: string;
-    middleName: string;
     lastName: string;
     email: string;
-    username: string;
     password: string;
     role: string;
     gender: string;
+    phoneNumber: string;
   }) => {
-    const existingEmployee = await this.Employee.findOne({ username });
+    const existingTeacher = await this.Teacher.findOne({ email, phoneNumber });
 
-    if (existingEmployee) {
+    if (existingTeacher) {
       return json(
         {
-          errors: { name: "Employee already exists" },
-          fields: { firstName, lastName, middleName, username, email },
+          message: "Teacher already exists",
         },
         { status: 400 }
       );
     }
 
-    // create new admin
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const employee = await this.Employee.create({
+    const teacher = await this.Teacher.create({
       firstName,
-      middleName,
       lastName,
       email,
-      username,
       password: hashedPassword,
       role,
       gender,
+      phoneNumber,
     });
 
-    if (!employee) {
+    if (!teacher) {
       return json(
         {
-          error: "Error creating employee",
-          fields: { firstName, lastName, middleName, username, email },
+          message: "Error creating teacher",
         },
         { status: 400 }
       );
     }
-    return redirect("/console/employees", 200);
+    return redirect("/admin/teachers", 200);
   };
 
   /**
-   * get a single employee
+   * get a single teacher
    * @param param0
    * @returns
    */
-  public getEmployee = async (id: string) => {
-    try {
-      const employee = await this.Employee.findById(id);
-      return employee;
-    } catch (err) {
-      throw err;
-    }
+  public getTeacherDetails = async (id: string) => {
+    const teacher = await this.Teacher.findById(id);
+    return teacher;
   };
 
   /**
-   * Update employee
+   * Update teacher
    * @param param0
    */
-  public updateEmployee = async ({
+  public updateTeacher = async ({
     firstName,
     middleName,
     lastName,
@@ -281,7 +273,7 @@ export default class TeacherController {
     _id: string;
   }) => {
     // try {
-    await this.Employee.findOneAndUpdate(
+    await this.Teacher.findOneAndUpdate(
       { _id },
       {
         firstName,
@@ -293,7 +285,7 @@ export default class TeacherController {
         gender,
       }
     );
-    return redirect(`/console/employees`, 200);
+    return redirect(`/admin/teachers`, 200);
     // } catch (error) {
     //   return json(
     //     {
@@ -316,13 +308,10 @@ export default class TeacherController {
     // }
   };
 
-  public deleteEmployee = async (id: string) => {
+  public deleteTeacher = async (id: string) => {
     try {
-      await this.Employee.findByIdAndDelete(id);
-      return json(
-        { message: "Employee deleted successfully" },
-        { status: 200 }
-      );
+      await this.Teacher.findByIdAndDelete(id);
+      return json({ message: "Teacher deleted successfully" }, { status: 200 });
     } catch (err) {
       throw err;
     }
@@ -338,44 +327,44 @@ export default class TeacherController {
 //   let domain = (request.headers.get("host") as string).split(":")[0];
 
 //   const clientDb = await connectToDomainDatabase(domain);
-//   const Employee = clientDb.model("employees", EmployeeSchema);
+//   const Teacher = clientDb.model("teachers", TeacherSchema);
 
 //   const hashedPassword = await bcrypt.hash(password, 10);
-//   const employee = await Employee.create({
+//   const teacher = await Teacher.create({
 //     username,
 //     email,
 //     password: hashedPassword,
 //   });
 
-//   if (!employee) {
+//   if (!teacher) {
 //     return json(
-//       { error: "Error creating employee", fields: { username, email } },
+//       { error: "Error creating teacher", fields: { username, email } },
 //       { status: 400 }
 //     );
 //   }
 
-//   return createEmployeeSession(employee.id, "/pos");
+//   return createTeacherSession(teacher.id, "/teacher");
 // };
 
 // export const changePassword = async (
-//   employeeId: string,
+//   teacherId: string,
 //   password: string,
 //   request: Request
 // ) => {
 //   let domain = (request.headers.get("host") as string).split(":")[0];
 
 //   const clientDb = await connectToDomainDatabase(domain);
-//   const Employee = clientDb.model("employees", EmployeeSchema);
+//   const Teacher = clientDb.model("teachers", TeacherSchema);
 
 //   const hashedPassword = await bcrypt.hash(password, 10);
 
-//   let employee = await Employee.updateOne(
-//     { _id: employeeId },
+//   let teacher = await Teacher.updateOne(
+//     { _id: teacherId },
 //     { password: hashedPassword },
 //     { new: true }
 //   );
 
-//   return employee;
+//   return teacher;
 // };
 
 // export const requirePermission = async ({
@@ -387,21 +376,21 @@ export default class TeacherController {
 // }) => {
 //   let domain = (request.headers.get("host") as string).split(":")[0];
 //   const clientDb = await connectToDomainDatabase(domain);
-//   const Employee = clientDb.model("employees", EmployeeSchema);
+//   const Teacher = clientDb.model("teachers", TeacherSchema);
 
-//   const employeeId = await requireEmployeeId(request);
+//   const teacherId = await requireTeacherId(request);
 
-//   if (typeof employeeId !== "string") {
+//   if (typeof teacherId !== "string") {
 //     return null;
 //   }
 
 //   try {
-//     const employee: EmployeeInterface = await Employee.findById(employeeId).select(
+//     const teacher: TeacherInterface = await Teacher.findById(teacherId).select(
 //       "id email username role permissions"
 //     );
 
 //     // filter permissions to check if there is any match for the action
-//     const hasPermission = employee.permissions.filter((permission) => {
+//     const hasPermission = teacher.permissions.filter((permission) => {
 //       return permission.action === action;
 //     });
 
@@ -415,7 +404,7 @@ export default class TeacherController {
 //       );
 //     }
 
-//     return employee;
+//     return teacher;
 //   } catch {
 //     throw logout(request);
 //   }
