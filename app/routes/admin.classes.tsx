@@ -52,12 +52,11 @@ const AdminClassesManagement = () => {
     },
   ];
 
-  const registerStudentFormItems = (
+  const createClassFormItems = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-10">
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <CustomInput name="firstName" label="First Name" />
-        <CustomInput name="lastName" label="Last Name" />
+        <CustomInput name="className" label="Class Name" />
         <CustomSelect
           items={[
             {
@@ -73,14 +72,8 @@ const AdminClassesManagement = () => {
               chipColor: "secondary",
             },
           ]}
-          name="gender"
-          label="Gender"
-        />
-
-        <CustomDatePicker
-          label="Date of Birth"
-          name="dob"
-          placeholder="Date of Birth"
+          name="classTeacher"
+          label="Class Teacher"
         />
         <CustomSelect
           items={[
@@ -100,54 +93,7 @@ const AdminClassesManagement = () => {
           name="class"
           label="Class"
         />
-        <CustomInput name="address" label="Address" />
-      </div>
-      {/* personal info */}
-      <div className="flex flex-col gap-5">
-        <CustomSelect
-          items={[
-            {
-              label: "Male",
-              value: "male",
-              id: "male",
-              chipColor: "primary",
-            },
-            {
-              label: "Female",
-              value: "female",
-              id: "female",
-              chipColor: "secondary",
-            },
-          ]}
-          name="parent"
-          label="Parent"
-        />
-        <CustomSelect
-          items={[
-            {
-              label: "Male",
-              value: "male",
-              id: "male",
-              chipColor: "primary",
-            },
-            {
-              label: "Female",
-              value: "female",
-              id: "female",
-              chipColor: "secondary",
-            },
-          ]}
-          name="emergencyContactRelationship"
-          label="Emergency Contact Relationship"
-        />
-        <CustomInput
-          name="emergencyContactName"
-          label="Emergency Contact Name"
-        />
-        <CustomInput
-          name="emergencyContactPhone"
-          label="Emergency Contact Phone"
-        />
+        <CustomInput name="description" label="Description" />
       </div>
     </div>
   );
@@ -161,8 +107,8 @@ const AdminClassesManagement = () => {
           items={students}
           totalPages={totalPages}
           columns={columns}
-          addButtonText="Register Student"
-          createRecordFormItems={registerStudentFormItems}
+          addButtonText="New Class"
+          createRecordFormItems={createClassFormItems}
           editRecord={editRecord}
           setEditRecord={setEditRecord}
         />
