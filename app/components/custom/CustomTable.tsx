@@ -213,10 +213,16 @@ const CustomTable: React.FC<CustomTableProps> = ({
           isLoading={isLoading}
           loadingContent={<Spinner label="Loading..." />}
           emptyContent={
-            <div className="flex items-center justify-center flex-col gap-3">
-              <img src={emptyFolderSVG} alt="No data" />
-              <p className="font-nunito text-lg md:text-xl">No records found</p>
-            </div>
+            isLoading ? (
+              <></>
+            ) : (
+              <div className="flex items-center justify-center flex-col gap-3">
+                <img src={emptyFolderSVG} alt="No data" />
+                <p className="font-nunito text-lg md:text-xl">
+                  No records found
+                </p>
+              </div>
+            )
           }
         >
           {(item: any) => (

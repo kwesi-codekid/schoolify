@@ -14,7 +14,7 @@ import { GridBackground } from "~/components/ui/grid-background";
 import { ThemeSwitcher } from "~/components/ThemeSwitcher";
 import { NotificationIcon } from "~/assets/icons/NotificationIcon";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const AdminLayout = ({
   children,
@@ -24,6 +24,21 @@ const AdminLayout = ({
   pageTitle: string;
 }) => {
   const [mobileNav, setMobileNav] = useState(false);
+  const [navbarRef] = useRef(null);
+
+  // if the user clicks outside the navbar, close the navbar
+  const handleClickOutside = (e: any) => {
+    if (navbarRef.current && !navbarRef.current.contains(e.target)) {
+      setMobileNav(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleMobileNav = () => {
     setMobileNav(!mobileNav);
@@ -196,6 +211,93 @@ const AdminLayout = ({
   ];
   return (
     <main className="h-screen overflow-hidden flex bg-slate-300 dark:bg-slate-950">
+      {/* mobile retractable sidebar */}
+      <motion.aside
+        ref={navbarRef}
+        initial="hide"
+        animate={mobileNav ? "show" : "hide"}
+        variants={{
+          hide: {
+            x: "-100%",
+          },
+          show: {
+            x: 0,
+          },
+        }}
+        className="fixed top-0 left-0 bg-white dark:backdrop-blur-sm dark:bg-slate-900/30 h-full w-60 shadow-2xl border-r dark:border-slate-100/20 z-50"
+      >
+        <nav className="flex flex-col gap-1">
+          {navbarLinks.map((link, index) => {
+            return (
+              <div key={index}>
+                {link.children.length > 0 ? (
+                  <Accordion
+                    motionProps={{
+                      variants: {
+                        enter: {
+                          y: 0,
+                          opacity: 1,
+                          height: "auto",
+                          transition: {
+                            height: {
+                              type: "spring",
+                              stiffness: 500,
+                              damping: 30,
+                              duration: 1,
+                            },
+                            opacity: {
+                              easings: "ease",
+                              duration: 1,
+                            },
+                          },
+                        },
+                        exit: {
+                          y: -10,
+                          opacity: 0,
+                          height: 0,
+                          transition: {
+                            height: {
+                              easings: "ease",
+                              duration: 0.25,
+                            },
+                            opacity: {
+                              easings: "ease",
+                              duration: 0.3,
+                            },
+                          },
+                        },
+                      },
+                    }}
+                    key={index}
+                    className="w-full"
+                  >
+                    <AccordionItem key={index} title={link.label}>
+                      {link.children.map((child, index) => (
+                        <Link
+                          key={index}
+                          to={child.href}
+                          className="flex items-center gap-2 p-3 font-montserrat text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-900/30"
+                        >
+                          {child.icon ? child.icon : ""}
+                          <span>{child.label}</span>
+                        </Link>
+                      ))}
+                    </AccordionItem>
+                  </Accordion>
+                ) : (
+                  <Link
+                    to={link.href}
+                    className={`flex items-center gap-2 p-3 font-montserrat text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-900/30`}
+                  >
+                    {link.icon ? link.icon : ""}
+                    <span>{link.label}</span>
+                  </Link>
+                )}
+              </div>
+            );
+          })}
+        </nav>
+      </motion.aside>
       <aside className="bg-white dark:backdrop-blur-sm dark:bg-slate-900/30 h-full w-[17%] shadow-2xl border-r dark:border-slate-100/20">
         {/* desktop sidebar content */}
         <nav className="hidden md:block">
@@ -294,7 +396,7 @@ const AdminLayout = ({
             initial="hide"
             animate={mobileNav ? "show" : "hide"}
             onClick={toggleMobileNav}
-            className="flex flex-col space-y-1 relative z-10"
+            className="flex flex-col space-y-1 relative z-10 md:hidden"
           >
             <motion.span
               variants={{
