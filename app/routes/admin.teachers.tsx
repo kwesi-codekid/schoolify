@@ -2,7 +2,6 @@ import CustomTable from "~/components/custom/CustomTable";
 import CustomInput from "~/components/custom/CustomInput";
 import CustomSelect from "~/components/custom/CustomSelect";
 import CustomDatePicker from "~/components/custom/CustomDatepicker";
-
 import AdminLayout from "~/layouts/AdminLayout";
 import { useEffect, useState } from "react";
 import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
