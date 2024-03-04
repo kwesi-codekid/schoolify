@@ -29,23 +29,15 @@ const AdminClassesManagement = () => {
   const columns = [
     {
       key: "name",
-      name: "Name",
+      name: "Class Name",
     },
     {
-      key: "email",
-      name: "Email",
+      key: "teacher",
+      name: "Assigned Teacher",
     },
     {
-      key: "phone",
-      name: "Phone",
-    },
-    {
-      key: "class",
-      name: "Class",
-    },
-    {
-      key: "section",
-      name: "Section",
+      key: "description",
+      name: "Description",
     },
     {
       key: "actions",
