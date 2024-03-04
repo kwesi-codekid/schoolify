@@ -39,7 +39,7 @@ let Admin: Model<Document>,
   Student: Model<Document>,
   Fee: Model<Document>,
   FeeStructure: Model<Document>,
-  Class: Model<Document>,
+  StudentClass: Model<Document>,
   Subject: Model<Document>,
   Parent: Model<Document>,
   //  ----------------- Other Models -----------------
@@ -169,10 +169,10 @@ const connectToDomainDatabase = async (domain: string) => {
     try {
       Admin = domainDb.model<Document>("admins");
 
-      Teacher = domainDb.model<Document>("teacher");
+      Teacher = domainDb.model<Document>("teachers");
       Student = domainDb.model<Document>("students");
       Fee = domainDb.model<Document>("fees");
-      Class = domainDb.model<Document>("classes");
+      StudentClass = domainDb.model<Document>("classes");
       FeeStructure = domainDb.model<Document>("fee_structures");
       Subject = domainDb.model<Document>("subjects");
       Parent = domainDb.model<Document>("parents");
@@ -188,10 +188,10 @@ const connectToDomainDatabase = async (domain: string) => {
     } catch (error) {
       Admin = domainDb.model<Document>("admins", AdminSchema);
 
-      Teacher = domainDb.model<Document>("teacher", TeacherSchema);
+      Teacher = domainDb.model<Document>("teachers", TeacherSchema);
       Student = domainDb.model<Document>("students", StudentSchema);
       Fee = domainDb.model<Document>("fees", FeeSchema);
-      Class = domainDb.model<Document>("classes", ClassSchema);
+      StudentClass = domainDb.model<Document>("classes", ClassSchema);
       FeeStructure = domainDb.model<Document>(
         "fee_structures",
         FeeStructureSchema
@@ -227,7 +227,7 @@ const connectToDomainDatabase = async (domain: string) => {
         Teacher,
         Student,
         Parent,
-        Class,
+        StudentClass,
         Fee,
         FeeStructure,
         Subject,

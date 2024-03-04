@@ -55,14 +55,11 @@ export type UserInterface = {
   updatedAt: Date;
 };
 
-export type CustomerInterface = {
+export type FeesStructureInterface = {
   _id: string;
   username: string;
   firstName: string;
   middleName: string;
-  lastName: string;
-  phone: string;
-  email: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -77,7 +74,7 @@ export type PageInterface = {
   };
 };
 
-export type EmployeeInterface = {
+export type TeacherInterface = {
   _id: string;
   firstName: string;
   middleName: string;
@@ -92,29 +89,11 @@ export type EmployeeInterface = {
   updatedAt: Date;
 };
 
-export type CartInterface = {
+export type StudentClassInterface = {
   _id: string;
-  user: string;
-  product: ProductInterface;
-  quantity: number;
-  color: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type OrderInterface = {
-  _id: string;
-  orderId: string;
-  orderItems: CartInterface[];
-  totalPrice: number;
-  deliveryStatus: string;
-  status: string;
-  user: UserInterface;
-  shippingAddress: AddressInterface;
-  paymentInfo: PaymentInterface;
-  orderType: "delivery" | "pickup";
-  isShop: boolean;
-  deliveryDate: Date;
+  name: string;
+  teacher: TeacherInterface;
+  feeStructure: FeesStructureInterface;
   createdAt: Date;
   updatedAt: Date;
 };
