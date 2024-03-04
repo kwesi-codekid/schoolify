@@ -10,17 +10,18 @@ const StudentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    class: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "classes",
-    },
+    // class: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "classes",
+    // },
     gender: {
       type: String,
       required: true,
+      enum: ["male", "female"],
     },
     status: {
       type: String,
-      required: true,
+      default: "active",
       enum: ["active", "inactive"],
     },
     dob: {

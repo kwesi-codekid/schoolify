@@ -108,18 +108,18 @@ export default class StudentController {
 
   public async getStudent({ id }: { id: string }) {
     try {
-      const branch = await this.Student.findById(id).populate("images");
-      // const reviews = await this.Reviews.find({ branch: id }).populate("user");
+      const student = await this.Student.findById(id).populate("images");
+      // const reviews = await this.Reviews.find({ student: id }).populate("user");
 
-      // branch.reviews = reviews;
-      return branch;
+      // student.reviews = reviews;
+      return student;
     } catch (error) {
-      console.error("Error retrieving branch:", error);
+      console.error("Error retrieving student:", error);
     }
   }
 
   /**
-   * Create a new branch
+   * Create a new student
    * @param path string
    * @param name string
    * @param description string
@@ -143,7 +143,8 @@ export default class StudentController {
     address: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-    const adminController = await new AdminController(this.request);
+
+    console.log({ firstName, lastName, gender, dob, studentClass, address });
 
     try {
       const existingStudent = await this.Student.findOne({
@@ -163,7 +164,7 @@ export default class StudentController {
         });
       }
 
-      const branch = await this.Student.create({
+      const student = await this.Student.create({
         firstName,
         lastName,
         gender,
@@ -172,7 +173,9 @@ export default class StudentController {
         address,
       });
 
-      if (!branch) {
+      console.log(student, "createsd");
+
+      if (!student) {
         session.flash("message", {
           title: "Error Adding Student",
           status: "error",
@@ -242,7 +245,7 @@ export default class StudentController {
   };
 
   /**
-   * Update branch
+   * Update student
    * @param param0 _id, name, price, description, category, quantity, costPrice
    * @returns null
    */
