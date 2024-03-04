@@ -125,33 +125,25 @@ export default class ClassController {
    */
   public createStudentClass = async ({
     path,
-    firstName,
-    lastName,
-    gender,
-    dob,
-    studentClass,
-    address,
+    name,
+    teacher,
+    description,
   }: {
     path: string;
-    firstName: string;
-    lastName: string;
-    gender: string;
-    dob: string;
-    studentClass: string;
-    address: string;
+    name: string;
+    teacher: string;
+    description: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-    const adminController = await new AdminController(this.request);
 
     try {
       const existingStudentClass = await this.StudentClass.findOne({
-        firstName,
-        lastName,
+        name,
       });
 
       if (existingStudentClass) {
         session.flash("message", {
-          title: "StudentClass already exists",
+          title: "Class already exists",
           status: "error",
         });
         return redirect(path, {
@@ -162,17 +154,14 @@ export default class ClassController {
       }
 
       const branch = await this.StudentClass.create({
-        firstName,
-        lastName,
-        gender,
-        dob,
-        class: studentClass,
-        address,
+        name,
+        teacher,
+        description,
       });
 
       if (!branch) {
         session.flash("message", {
-          title: "Error Adding StudentClass",
+          title: "Error Adding Class",
           status: "error",
         });
         return redirect(path, {
@@ -183,7 +172,7 @@ export default class ClassController {
       }
 
       session.flash("message", {
-        title: "StudentClass Added Successful",
+        title: "Class Added Successful",
         status: "success",
       });
       return redirect(path, {
@@ -195,7 +184,7 @@ export default class ClassController {
       console.log(error);
 
       session.flash("message", {
-        title: "Error Adding StudentClass",
+        title: "Error Adding Class",
         status: "error",
         description: error.message,
       });
@@ -247,32 +236,23 @@ export default class ClassController {
   public updateStudentClass = async ({
     path,
     _id,
-    firstName,
-    lastName,
-    gender,
-    dob,
-    studentClass,
-    address,
+    name,
+    teacher,
+    description,
   }: {
     path: string;
     _id: string;
-    firstName: string;
-    lastName: string;
-    gender: string;
-    dob: string;
-    studentClass: string;
-    address: string;
+    name: string;
+    teacher: string;
+    description: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
     try {
       await this.StudentClass.findByIdAndUpdate(_id, {
-        firstName,
-        lastName,
-        gender,
-        dob,
-        class: studentClass,
-        address,
+        name,
+        teacher,
+        description,
       });
 
       session.flash("message", {
