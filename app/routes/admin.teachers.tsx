@@ -10,9 +10,8 @@ import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
 
-const AdminStudentsManagement = () => {
+const AdminTeachersManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
-  console.log(students);
 
   const [studentData, setStudentData] = useState(students);
 
@@ -43,7 +42,7 @@ const AdminStudentsManagement = () => {
     },
   ];
 
-  const registerStudentFormItems = (
+  const createTeacherFormItems = (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-10">
       {/* personal info */}
       <div className="flex flex-col gap-5">
@@ -84,14 +83,14 @@ const AdminStudentsManagement = () => {
   const [editRecord, setEditRecord] = useState(null);
 
   return (
-    <AdminLayout pageTitle="Student Management">
+    <AdminLayout pageTitle="Teachers Management">
       <section className="p-4 backdrop-blur-[1px]">
         <CustomTable
           items={studentData}
           totalPages={totalPages}
           columns={columns}
-          addButtonText="Register Student"
-          createRecordFormItems={registerStudentFormItems}
+          addButtonText="Create Teacher"
+          createRecordFormItems={createTeacherFormItems}
           editRecord={editRecord}
           setEditRecord={setEditRecord}
         />
@@ -100,7 +99,7 @@ const AdminStudentsManagement = () => {
   );
 };
 
-export default AdminStudentsManagement;
+export default AdminTeachersManagement;
 
 export const action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);
