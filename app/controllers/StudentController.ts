@@ -45,7 +45,6 @@ export default class StudentController {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
     const skipCount = (page - 1) * limit; // Calculate the number of documents to skip
-
     const searchFilter = search_term
       ? {
           $or: [

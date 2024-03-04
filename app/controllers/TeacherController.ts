@@ -163,15 +163,50 @@ export default class TeacherController {
     });
   }
 
-  public getTeachers = async ({ page }: { page: number }) => {
-    const limit = 10;
-    const skipCount = (page - 1) * limit;
+  public getTeachers = async ({
+    page,
+    search_term,
+    limit = 10,
+  }: {
+    page: number;
+    search_term: string;
+    limit?: number;
+  }) => {
+    const skipCount = (page - 1) * limit; // Calculate the number of documents to skip
+    const searchFilter = search_term
+      ? {
+          $or: [
+            {
+              firstName: {
+                $regex: new RegExp(
+                  search_term
+                    .split(" ")
+                    .map((term) => `(?=.*${term})`)
+                    .join(""),
+                  "i"
+                ),
+              },
+            },
+            {
+              lastName: {
+                $regex: new RegExp(
+                  search_term
+                    .split(" ")
+                    .map((term) => `(?=.*${term})`)
+                    .join(""),
+                  "i"
+                ),
+              },
+            },
+          ],
+        }
+      : {};
 
     const totalTeacherCount = await this.Teacher.countDocuments({}).exec();
     const totalPages = Math.ceil(totalTeacherCount / limit);
 
     try {
-      const teachers = await this.Teacher.find({})
+      const teachers = await this.Teacher.find(searchFilter)
         .skip(skipCount)
         .limit(limit)
         .exec();
@@ -208,33 +243,58 @@ export default class TeacherController {
     phone: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-    const existingTeacher = await this.Teacher.findOne({ email, phone });
 
-    if (existingTeacher) {
+    try {
+      const existingTeacher = await this.Teacher.findOne({ email, phone });
+
+      if (existingTeacher) {
+        session.flash("message", {
+          title: "Teacher already exists",
+          status: "error",
+        });
+        return redirect(path, {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const teacher = await this.Teacher.create({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        gender,
+        address,
+        phone,
+      });
+
+      if (!teacher) {
+        session.flash("message", {
+          title: "Error creating teacher",
+          status: "error",
+        });
+        return redirect(path, {
+          headers: {
+            "Set-Cookie": await commitFlashSession(session),
+          },
+        });
+      }
+
       session.flash("message", {
-        title: "Teacher already exists",
-        status: "error",
+        title: "No Teacher Found",
+        status: "success",
       });
       return redirect(path, {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
       });
-    }
+    } catch (error) {
+      console.log(error);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const teacher = await this.Teacher.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-      gender,
-      address,
-      phone,
-    });
-
-    if (!teacher) {
       session.flash("message", {
         title: "Error creating teacher",
         status: "error",
@@ -245,16 +305,6 @@ export default class TeacherController {
         },
       });
     }
-
-    session.flash("message", {
-      title: "No Teacher Found",
-      status: "success",
-    });
-    return redirect(path, {
-      headers: {
-        "Set-Cookie": await commitFlashSession(session),
-      },
-    });
   };
 
   /**
