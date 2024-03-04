@@ -13,6 +13,10 @@ const ClassSchema: Schema = new mongoose.Schema(
       // type: mongoose.Schema.Types.ObjectId,
       // ref: "teachers",
     },
+    description: {
+      type: String,
+      required: false,
+    },
     feeStructure: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "fee_structures",
