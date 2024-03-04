@@ -69,7 +69,7 @@ export default class AdminController {
   private async createAdminSession(adminId: string, redirectTo: string) {
     const session = await this.storage.getSession();
     session.set("adminId", adminId);
-    session.set("store_details", this.connectionDetails);
+    // session.set("store_details", this.connectionDetails);
 
     return redirect(redirectTo, {
       headers: {
@@ -195,8 +195,9 @@ export default class AdminController {
         },
       });
     }
+    console.log(admin.id);
 
-    return this.createAdminSession(admin.id, "/admin");
+    return await this.createAdminSession(admin.id, "/admin");
   }
 
   public updateProfile = async ({

@@ -14,7 +14,7 @@ import { GridBackground } from "~/components/ui/grid-background";
 import { ThemeSwitcher } from "~/components/ThemeSwitcher";
 import { NotificationIcon } from "~/assets/icons/NotificationIcon";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 const AdminLayout = ({
   children,
@@ -24,21 +24,6 @@ const AdminLayout = ({
   pageTitle: string;
 }) => {
   const [mobileNav, setMobileNav] = useState(false);
-  const [navbarRef] = useRef(null);
-
-  // if the user clicks outside the navbar, close the navbar
-  const handleClickOutside = (e: any) => {
-    if (navbarRef.current && !navbarRef.current.contains(e.target)) {
-      setMobileNav(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const toggleMobileNav = () => {
     setMobileNav(!mobileNav);
@@ -213,7 +198,7 @@ const AdminLayout = ({
     <main className="h-screen overflow-hidden flex bg-slate-300 dark:bg-slate-950">
       {/* mobile retractable sidebar */}
       <motion.aside
-        ref={navbarRef}
+        // ref={navbarRef}
         initial="hide"
         animate={mobileNav ? "show" : "hide"}
         variants={{
