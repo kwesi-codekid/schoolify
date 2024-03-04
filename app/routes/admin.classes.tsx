@@ -10,7 +10,7 @@ import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
 
-const AdminStudentsManagement = () => {
+const AdminClassesManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
   console.log(students);
 
@@ -155,7 +155,7 @@ const AdminStudentsManagement = () => {
   const [editRecord, setEditRecord] = useState(null);
 
   return (
-    <AdminLayout pageTitle="Student Management">
+    <AdminLayout pageTitle="Classes Management">
       <section className="p-4 backdrop-blur-[1px]">
         <CustomTable
           items={students}
@@ -171,7 +171,7 @@ const AdminStudentsManagement = () => {
   );
 };
 
-export default AdminStudentsManagement;
+export default AdminClassesManagement;
 
 export const action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -218,8 +218,14 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const adminController = await new AdminController(request);
-  const user = await adminController.getAdmin();
+  // const adminController = await new AdminController(request);
+  // const user = await adminController.getAdmin();
+
+  const user = {
+    name: "Admin",
+    email: "admin@gmail.com",
+    role: "admin",
+  };
 
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get("page") as string) || 1;
