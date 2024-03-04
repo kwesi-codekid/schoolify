@@ -11,8 +11,10 @@ import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
 
 const AdminStudentsManagement = () => {
-  const { students } = useLoaderData();
+  const { students, totalPages, search_term, user, page } = useLoaderData();
   console.log(students);
+
+  
 
   const items = [
     // {
@@ -158,8 +160,8 @@ const AdminStudentsManagement = () => {
     <AdminLayout pageTitle="Student Management">
       <section className="p-4 backdrop-blur-[1px]">
         <CustomTable
-          items={items}
-          totalPages={1}
+          items={students}
+          totalPages={totalPages}
           columns={columns}
           addButtonText="Register Student"
           createRecordFormItems={registerStudentFormItems}
