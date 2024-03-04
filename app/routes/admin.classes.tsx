@@ -54,48 +54,27 @@ const AdminClassesManagement = () => {
   ];
 
   const createClassFormItems = (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-10">
-      {/* personal info */}
-      <div className="flex flex-col gap-5">
-        <CustomInput name="className" label="Class Name" />
-        <CustomSelect
-          items={[
-            {
-              label: "Male",
-              value: "male",
-              id: "male",
-              chipColor: "primary",
-            },
-            {
-              label: "Female",
-              value: "female",
-              id: "female",
-              chipColor: "secondary",
-            },
-          ]}
-          name="classTeacher"
-          label="Class Teacher"
-        />
-        <CustomSelect
-          items={[
-            {
-              label: "Male",
-              value: "male",
-              id: "male",
-              chipColor: "primary",
-            },
-            {
-              label: "Female",
-              value: "female",
-              id: "female",
-              chipColor: "secondary",
-            },
-          ]}
-          name="class"
-          label="Class"
-        />
-        <CustomInput name="description" label="Description" />
-      </div>
+    <div className="flex flex-col gap-5">
+      <CustomInput name="className" label="Class Name" />
+      <CustomSelect
+        items={[
+          {
+            label: "Male",
+            value: "male",
+            id: "male",
+            chipColor: "primary",
+          },
+          {
+            label: "Female",
+            value: "female",
+            id: "female",
+            chipColor: "secondary",
+          },
+        ]}
+        name="classTeacher"
+        label="Class Teacher"
+      />
+      <CustomInput name="description" label="Description" />
     </div>
   );
 
@@ -110,6 +89,7 @@ const AdminClassesManagement = () => {
           columns={columns}
           addButtonText="New Class"
           createRecordFormItems={createClassFormItems}
+          createRecordModalSize="md"
           editRecord={editRecord}
           setEditRecord={setEditRecord}
         />
