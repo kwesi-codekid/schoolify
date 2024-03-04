@@ -1,6 +1,6 @@
 import mongoose, { type Document, type Model, type Connection } from "mongoose";
 import AdminSchema from "~/models/Admin";
-import StudentSchema from "~/models/User";
+import StudentSchema from "~/models/Student";
 import EmailHistorySchema from "~/models/EmailHistory";
 // import SMSHistorySchema from "~/models/SMSHistory";
 import ClientConnectionSchema from "~/models/ClientConnection";
@@ -168,9 +168,9 @@ const connectToDomainDatabase = async (domain: string) => {
 
     try {
       Admin = domainDb.model<Document>("admins");
-
       Teacher = domainDb.model<Document>("teachers");
       Student = domainDb.model<Document>("students");
+
       Fee = domainDb.model<Document>("fees");
       StudentClass = domainDb.model<Document>("classes");
       FeeStructure = domainDb.model<Document>("fee_structures");
@@ -181,15 +181,15 @@ const connectToDomainDatabase = async (domain: string) => {
       SMSSettings = domainDb.model<Document>("sms_settings");
       GeneralSettings = domainDb.model<Document>("general_settings");
       UserVisit = domainDb.model<Document>("user_visits");
-      SettingsBranch = domainDb.model<Document>("settings_branch");
       Branch = domainDb.model<Document>("branches");
+      SettingsBranch = domainDb.model<Document>("settings_branch");
       Payment = domainDb.model<Document>("payments");
       Permission = domainDb.model<Document>("permissions");
     } catch (error) {
       Admin = domainDb.model<Document>("admins", AdminSchema);
-
       Teacher = domainDb.model<Document>("teachers", TeacherSchema);
       Student = domainDb.model<Document>("students", StudentSchema);
+
       Fee = domainDb.model<Document>("fees", FeeSchema);
       StudentClass = domainDb.model<Document>("classes", ClassSchema);
       FeeStructure = domainDb.model<Document>(
