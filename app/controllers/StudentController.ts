@@ -173,8 +173,6 @@ export default class StudentController {
         address,
       });
 
-      console.log(student, "createsd");
-
       if (!student) {
         session.flash("message", {
           title: "Error Adding Student",

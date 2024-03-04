@@ -189,31 +189,37 @@ export default class TeacherController {
    * @returns
    */
   public createTeacher = async ({
+    path,
     firstName,
     lastName,
+    gender,
     email,
     password,
-    role,
-    gender,
-    phoneNumber,
+    address,
+    phone,
   }: {
+    path: string;
     firstName: string;
     lastName: string;
     email: string;
     password: string;
-    role: string;
+    address: string;
     gender: string;
-    phoneNumber: string;
+    phone: string;
   }) => {
-    const existingTeacher = await this.Teacher.findOne({ email, phoneNumber });
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+    const existingTeacher = await this.Teacher.findOne({ email, phone });
 
     if (existingTeacher) {
-      return json(
-        {
-          message: "Teacher already exists",
+      session.flash("message", {
+        title: "Teacher already exists",
+        status: "error",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
         },
-        { status: 400 }
-      );
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -223,20 +229,32 @@ export default class TeacherController {
       lastName,
       email,
       password: hashedPassword,
-      role,
       gender,
-      phoneNumber,
+      address,
+      phone,
     });
 
     if (!teacher) {
-      return json(
-        {
-          message: "Error creating teacher",
+      session.flash("message", {
+        title: "Error creating teacher",
+        status: "error",
+      });
+      return redirect(path, {
+        headers: {
+          "Set-Cookie": await commitFlashSession(session),
         },
-        { status: 400 }
-      );
+      });
     }
-    return redirect("/admin/teachers", 200);
+
+    session.flash("message", {
+      title: "No Teacher Found",
+      status: "success",
+    });
+    return redirect(path, {
+      headers: {
+        "Set-Cookie": await commitFlashSession(session),
+      },
+    });
   };
 
   /**
@@ -254,67 +272,68 @@ export default class TeacherController {
    * @param param0
    */
   public updateTeacher = async ({
-    firstName,
-    middleName,
-    lastName,
-    email,
-    username,
-    role,
-    gender,
     _id,
+    path,
+    firstName,
+    lastName,
+    gender,
+    email,
+    address,
+    phone,
   }: {
+    _id: string;
+    path: string;
     firstName: string;
-    middleName: string;
     lastName: string;
     email: string;
-    username: string;
-    role: string;
+    phone: string;
+    address: string;
     gender: string;
-    _id: string;
   }) => {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
     // try {
     await this.Teacher.findOneAndUpdate(
       { _id },
       {
         firstName,
-        middleName,
         lastName,
-        email,
-        username,
-        role,
         gender,
+        email,
+        address,
+        phone,
       }
     );
-    return redirect(`/admin/teachers`, 200);
-    // } catch (error) {
-    //   return json(
-    //     {
-    //       errors: {
-    //         name: "Error occured while updating product category",
-    //         error: error,
-    //       },
-    //       fields: {
-    //         firstName,
-    //         middleName,
-    //         lastName,
-    //         email,
-    //         username,
-    //         role,
-    //         gender,
-    //       },
-    //     },
-    //     { status: 400 }
-    //   );
-    // }
+
+    session.flash("message", {
+      title: "Teacher updated successfully",
+      status: "success",
+    });
+    return redirect(path, {
+      headers: {
+        "Set-Cookie": await commitFlashSession(session),
+      },
+    });
   };
 
-  public deleteTeacher = async (id: string) => {
-    try {
-      await this.Teacher.findByIdAndDelete(id);
-      return json({ message: "Teacher deleted successfully" }, { status: 200 });
-    } catch (err) {
-      throw err;
-    }
+  public deleteTeacher = async ({
+    _id,
+    path,
+  }: {
+    _id: string;
+    path: string;
+  }) => {
+    const session = await getFlashSession(this.request.headers.get("Cookie"));
+    await this.Teacher.findByIdAndDelete(_id);
+
+    session.flash("message", {
+      title: "Teacher deleted successfully",
+      status: "success",
+    });
+    return redirect(path, {
+      headers: {
+        "Set-Cookie": await commitFlashSession(session),
+      },
+    });
   };
 }
 

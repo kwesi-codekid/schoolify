@@ -9,6 +9,7 @@ import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
+import TeacherController from "~/controllers/TeacherController";
 
 const AdminTeachersManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
@@ -71,7 +72,6 @@ const AdminTeachersManagement = () => {
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <CustomInput name="address" label="Residential Address" />
         <CustomDatePicker label="Date of Employment" name="employmentDate" />
         <CustomInput name="address" label="Address" />
         <CustomInput name="password" label="Password" />
@@ -110,36 +110,49 @@ export const action: ActionFunction = async ({ request }) => {
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
   const gender = formData.get("gender") as string;
-  const dob = formData.get("dob") as string;
-  const studentClass = formData.get("class") as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
 
   const intent = formData.get("intent") as string;
-  const studentController = await new StudentController(request);
+  const studentController = await new TeacherController(request);
 
   if (intent == "create") {
-    return await studentController.createStudent({
+    console.log({
+      firstName,
+      lastName,
+      gender,
+      email,
+      password,
+      address,
+      phone,
+    });
+
+    return await studentController.createTeacher({
       path,
       firstName,
       lastName,
       gender,
-      dob,
-      studentClass,
+      email,
+      password,
       address,
+      phone,
     });
   } else if (intent == "update") {
-    return await studentController.updateStudent({
+    return await studentController.updateTeacher({
       _id,
       path,
       firstName,
       lastName,
       gender,
-      dob,
-      studentClass,
+      email,
       address,
+      phone,
     });
   } else if (intent == "delete") {
-    return await studentController.deleteStudent({ _id, path });
+    return await studentController.deleteTeacher({ _id, path });
   } else {
     return true;
   }
