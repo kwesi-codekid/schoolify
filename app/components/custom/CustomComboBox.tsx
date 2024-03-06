@@ -16,9 +16,10 @@ export default function CustomComboBox({
         signal,
       });
       const json = await res.json();
+      console.log(json);
 
       return {
-        items: json.results,
+        items: json,
       };
     },
   });
