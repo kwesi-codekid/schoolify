@@ -140,6 +140,7 @@ export default class StudentController {
     parent,
     emergencyContactName,
     emergencyContactPhone,
+    emergencyContactRelationship,
   }: {
     path: string;
     firstName: string;
@@ -152,6 +153,7 @@ export default class StudentController {
     parent: string;
     emergencyContactName: string;
     emergencyContactPhone: string;
+    emergencyContactRelationship: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -187,6 +189,7 @@ export default class StudentController {
         emergencyContact: {
           name: emergencyContactName,
           phone: emergencyContactPhone,
+          relationship: emergencyContactRelationship,
         },
       });
 
@@ -278,6 +281,7 @@ export default class StudentController {
     parent,
     emergencyContactName,
     emergencyContactPhone,
+    emergencyContactRelationship,
   }: {
     path: string;
     _id: string;
@@ -292,6 +296,7 @@ export default class StudentController {
     parent: string;
     emergencyContactName: string;
     emergencyContactPhone: string;
+    emergencyContactRelationship: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -309,6 +314,7 @@ export default class StudentController {
         emergencyContact: {
           name: emergencyContactName,
           phone: emergencyContactPhone,
+          relationship: emergencyContactRelationship,
         },
       });
 

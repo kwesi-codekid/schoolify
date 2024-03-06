@@ -1,35 +1,35 @@
 import { redirect } from "@remix-run/node";
-import type { StudentInterface } from "../types";
+import type { ParentInterface } from "../types";
 import { commitFlashSession, getFlashSession } from "~/flash-session";
 import AdminController from "./AdminController";
 import { connectToDomainDatabase } from "~/mongoose";
 
-export default class StudentController {
+export default class ParentController {
   private request: Request;
-  private Student: any;
+  private Parent: any;
   private domain: string;
 
   constructor(request: Request) {
     this.request = request;
     this.domain = (this.request.headers.get("host") as string).split(":")[0];
 
-    return (async (): Promise<StudentController> => {
+    return (async (): Promise<ParentController> => {
       await this.initializeModels();
       return this;
-    })() as unknown as StudentController;
+    })() as unknown as ParentController;
   }
 
   private async initializeModels() {
-    const { Student } = await connectToDomainDatabase(this.domain);
-    this.Student = Student;
+    const { Parent } = await connectToDomainDatabase(this.domain);
+    this.Parent = Parent;
   }
 
   /**
-   * Retrieve all Student
+   * Retrieve all Parent
    * @param param0 pag
-   * @returns {students: StudentInterface, page: number}
+   * @returns {parents: ParentInterface, page: number}
    */
-  public async getStudents({
+  public async getParents({
     page,
     search_term,
     limit = 10,
@@ -38,7 +38,7 @@ export default class StudentController {
     search_term?: string;
     limit?: number;
   }): Promise<{
-    students: StudentInterface[];
+    parents: ParentInterface[];
     totalPages: number;
   }> {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
@@ -75,7 +75,7 @@ export default class StudentController {
       : {};
 
     try {
-      const students = await this.Student.find(searchFilter)
+      const parents = await this.Parent.find(searchFilter)
         .skip(skipCount)
         .limit(limit)
         // .populate("church")
@@ -84,20 +84,20 @@ export default class StudentController {
         .sort({ name: "asc" })
         .exec();
 
-      const totalStudentsCount = await this.Student.countDocuments(
+      const totalParentsCount = await this.Parent.countDocuments(
         searchFilter
       ).exec();
-      const totalPages = Math.ceil(totalStudentsCount / limit);
+      const totalPages = Math.ceil(totalParentsCount / limit);
 
-      return { students, totalPages };
+      return { parents, totalPages };
     } catch (error) {
       console.log(error);
       session.flash("message", {
-        title: "Error retrieving students",
+        title: "Error retrieving parents",
         status: "error",
         description: error.message,
       });
-      return redirect("/admin/students", {
+      return redirect("/admin/parents", {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
@@ -105,9 +105,9 @@ export default class StudentController {
     }
   }
 
-  public async getStudent({ id }: { id: string }) {
+  public async getParent({ id }: { id: string }) {
     try {
-      const branch = await this.Student.findById(id).populate("images");
+      const branch = await this.Parent.findById(id).populate("images");
       // const reviews = await this.Reviews.find({ branch: id }).populate("user");
 
       // branch.reviews = reviews;
@@ -122,9 +122,9 @@ export default class StudentController {
    * @param path string
    * @param name string
    * @param description string
-   * @returns StudentInterface
+   * @returns ParentInterface
    */
-  public createStudent = async ({
+  public createParent = async ({
     path,
     firstName,
     lastName,
@@ -145,14 +145,14 @@ export default class StudentController {
     const adminController = await new AdminController(this.request);
 
     try {
-      const existingStudent = await this.Student.findOne({
+      const existingParent = await this.Parent.findOne({
         firstName,
         lastName,
       });
 
-      if (existingStudent) {
+      if (existingParent) {
         session.flash("message", {
-          title: "Student already exists",
+          title: "Parent already exists",
           status: "error",
         });
         return redirect(path, {
@@ -162,7 +162,7 @@ export default class StudentController {
         });
       }
 
-      const branch = await this.Student.create({
+      const branch = await this.Parent.create({
         firstName,
         lastName,
         gender,
@@ -173,7 +173,7 @@ export default class StudentController {
 
       if (!branch) {
         session.flash("message", {
-          title: "Error Adding Student",
+          title: "Error Adding Parent",
           status: "error",
         });
         return redirect(path, {
@@ -184,7 +184,7 @@ export default class StudentController {
       }
 
       session.flash("message", {
-        title: "Student Added Successful",
+        title: "Parent Added Successful",
         status: "success",
       });
       return redirect(path, {
@@ -196,7 +196,7 @@ export default class StudentController {
       console.log(error);
 
       session.flash("message", {
-        title: "Error Adding Student",
+        title: "Error Adding Parent",
         status: "error",
         description: error.message,
       });
@@ -209,20 +209,20 @@ export default class StudentController {
   };
 
   /**
-   * Import students from csv
-   * @param data Array of students
+   * Import parents from csv
+   * @param data Array of parents
    * @returns null
    */
   public importBatch = async (data) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
-    const students = await this.Student.create(data);
-    if (!students) {
+    const parents = await this.Parent.create(data);
+    if (!parents) {
       session.flash("message", {
-        title: "Error Importing Students",
+        title: "Error Importing Parents",
         status: "error",
       });
-      return redirect(`/admin/students`, {
+      return redirect(`/admin/parents`, {
         headers: {
           "Set-Cookie": await commitFlashSession(session),
         },
@@ -230,10 +230,10 @@ export default class StudentController {
     }
 
     session.flash("message", {
-      title: "Students Imported Successful",
+      title: "Parents Imported Successful",
       status: "success",
     });
-    return redirect(`/admin/students`, {
+    return redirect(`/admin/parents`, {
       headers: {
         "Set-Cookie": await commitFlashSession(session),
       },
@@ -245,7 +245,7 @@ export default class StudentController {
    * @param param0 _id, name, price, description, category, quantity, costPrice
    * @returns null
    */
-  public updateStudent = async ({
+  public updateParent = async ({
     path,
     _id,
     firstName,
@@ -267,7 +267,7 @@ export default class StudentController {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
     try {
-      await this.Student.findByIdAndUpdate(_id, {
+      await this.Parent.findByIdAndUpdate(_id, {
         firstName,
         lastName,
         gender,
@@ -277,7 +277,7 @@ export default class StudentController {
       });
 
       session.flash("message", {
-        title: "Student Updated Successful",
+        title: "Parent Updated Successful",
         status: "success",
       });
       return redirect(path, {
@@ -289,7 +289,7 @@ export default class StudentController {
       console.log(error);
 
       session.flash("message", {
-        title: "Error Updating Student",
+        title: "Error Updating Parent",
         status: "error",
       });
       return redirect(path, {
@@ -300,7 +300,7 @@ export default class StudentController {
     }
   };
 
-  public deleteStudent = async ({
+  public deleteParent = async ({
     _id,
     path,
   }: {
@@ -310,10 +310,10 @@ export default class StudentController {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
     try {
-      await this.Student.findByIdAndDelete(_id);
+      await this.Parent.findByIdAndDelete(_id);
 
       session.flash("message", {
-        title: "Student Deleted Successful",
+        title: "Parent Deleted Successful",
         status: "success",
       });
       return redirect(path, {
@@ -325,7 +325,7 @@ export default class StudentController {
       console.log(err);
 
       session.flash("message", {
-        title: "Error Deleting Student",
+        title: "Error Deleting Parent",
         status: "error",
       });
       return redirect(path, {
