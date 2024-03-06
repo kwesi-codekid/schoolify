@@ -16,8 +16,7 @@ const ParentSchema = new mongoose.Schema(
     email: {
       type: String,
     },
-
-    ward: [
+    wards: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "students",

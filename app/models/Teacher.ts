@@ -14,6 +14,7 @@ const TeacherSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    profileImage: String,
     password: String,
     gender: String,
     employmentDate: Date,

@@ -9,6 +9,7 @@ const AdminSchema = new mongoose.Schema(
     username: String,
     password: String,
     role: String,
+    profileImage: String,
     permissions: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -232,6 +232,7 @@ export default class TeacherController {
     password,
     address,
     phone,
+    profileImage,
   }: {
     path: string;
     firstName: string;
@@ -241,6 +242,7 @@ export default class TeacherController {
     address: string;
     gender: string;
     phone: string;
+    profileImage: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -269,6 +271,7 @@ export default class TeacherController {
         gender,
         address,
         phone,
+        profileImage,
       });
 
       if (!teacher) {

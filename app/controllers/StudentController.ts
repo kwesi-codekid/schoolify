@@ -132,6 +132,7 @@ export default class StudentController {
     dob,
     studentClass,
     address,
+    profileImage,
   }: {
     path: string;
     firstName: string;
@@ -140,6 +141,7 @@ export default class StudentController {
     dob: string;
     studentClass: string;
     address: string;
+    profileImage: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -170,6 +172,7 @@ export default class StudentController {
         dob,
         class: studentClass,
         address,
+        profileImage,
       });
 
       if (!student) {
@@ -255,6 +258,7 @@ export default class StudentController {
     dob,
     studentClass,
     address,
+    profileImage,
   }: {
     path: string;
     _id: string;
@@ -264,6 +268,7 @@ export default class StudentController {
     dob: string;
     studentClass: string;
     address: string;
+    profileImage: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -275,6 +280,7 @@ export default class StudentController {
         dob,
         class: studentClass,
         address,
+        profileImage,
       });
 
       session.flash("message", {
