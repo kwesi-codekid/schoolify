@@ -22,7 +22,6 @@ const CustomDatePicker = ({
         startDate: defaultValue,
         endDate: defaultValue,
       });
-      console.log(defaultValue, value);
     }
   }, [defaultValue]);
 

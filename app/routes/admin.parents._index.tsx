@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomTable from "~/components/custom/CustomTable";
 import CustomInput from "~/components/custom/CustomInput";
 import CustomSelect from "~/components/custom/CustomSelect";
@@ -10,6 +11,7 @@ import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
 import ParentController from "~/controllers/ParentController";
+import { Input } from "@nextui-org/react";
 
 const AdminParentsManagement = () => {
   const { parents, totalPages, search_term, user, page } = useLoaderData();
@@ -27,16 +29,28 @@ const AdminParentsManagement = () => {
 
   const columns = [
     {
-      key: "name",
-      name: "Parent Name",
+      key: "firstName",
+      name: "First Name",
     },
     {
-      key: "teacher",
-      name: "Assigned Teacher",
+      key: "lastName",
+      name: "Last Name",
     },
     {
-      key: "description",
-      name: "Description",
+      key: "title",
+      name: "Title",
+    },
+    {
+      key: "email",
+      name: "Email",
+    },
+    {
+      key: "phone",
+      name: "Phone",
+    },
+    {
+      key: "address",
+      name: "Residential Address",
     },
     {
       key: "actions",
@@ -46,30 +60,53 @@ const AdminParentsManagement = () => {
 
   const createParentFormItems = (
     <div className="flex flex-col gap-5">
-      <CustomInput name="className" label="Parent Name" />
-      <CustomSelect
-        items={[
-          {
-            label: "Male",
-            value: "male",
-            id: "male",
-            chipColor: "primary",
-          },
-          {
-            label: "Female",
-            value: "female",
-            id: "female",
-            chipColor: "secondary",
-          },
-        ]}
-        name="classTeacher"
-        label="Parent Teacher"
-      />
-      <CustomInput name="description" label="Description" />
+      <CustomInput name="firstName" label="First Name" />
+      <CustomInput name="lastName" label="Last Name" />
+      <CustomInput name="email" label="Email" />
+      <CustomInput name="phone" label="Phone" />
+      <CustomInput name="title" label="Title" />
+
+      <CustomInput name="address" label="Address" />
     </div>
   );
 
-  const [editRecord, setEditRecord] = useState(null);
+  const [editRecord, setEditRecord] = useState<any>(null);
+  const editParentFormItems = (
+    <div className="flex flex-col gap-5">
+      <Input type="hidden" name="_id" defaultValue={editRecord?._id} />
+      <CustomInput
+        name="firstName"
+        label="First Name"
+        defaultValue={editRecord?.firstName}
+      />
+      <CustomInput
+        name="lastName"
+        label="Last Name"
+        defaultValue={editRecord?.lastName}
+      />
+      <CustomInput
+        name="email"
+        label="Email"
+        defaultValue={editRecord?.email}
+      />
+      <CustomInput
+        name="phone"
+        label="Phone"
+        defaultValue={editRecord?.phone}
+      />
+      <CustomInput
+        name="title"
+        label="Title"
+        defaultValue={editRecord?.title}
+      />
+
+      <CustomInput
+        name="address"
+        label="Address"
+        defaultValue={editRecord?.address}
+      />
+    </div>
+  );
 
   return (
     <AdminLayout pageTitle="Parents Management">
@@ -81,6 +118,7 @@ const AdminParentsManagement = () => {
           addButtonText="New Parent"
           createRecordFormItems={createParentFormItems}
           createRecordModalSize="md"
+          editRecordFormItems={editParentFormItems}
           editRecord={editRecord}
           setEditRecord={setEditRecord}
         />
