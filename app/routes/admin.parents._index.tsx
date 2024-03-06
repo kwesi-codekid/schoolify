@@ -142,7 +142,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const status = url.searchParams.get("order_status") as string;
 
   const classController = await new ParentController(request);
-  const { parents, totalPages } = await classController.getStudentParents({
+  const { parents, totalPages } = await classController.getParents({
     page,
     search_term,
   });
