@@ -2,6 +2,7 @@
 import CustomInput from "~/components/custom/CustomInput";
 import CustomSelect from "~/components/custom/CustomSelect";
 import CustomDatePicker from "~/components/custom/CustomDatepicker";
+import UploadFileInput from "~/components/custom/upload-file-input";
 
 import { useAsyncList } from "@react-stately/data";
 import { EyeOutlined } from "~/assets/icons/EyeOutlined";
@@ -157,11 +158,114 @@ const AdminStudentsManagement = () => {
           name="emergencyContactPhone"
           label="Emergency Contact Phone"
         />
+
+        <UploadFileInput name="profileImage" />
       </div>
     </div>
   );
 
-  const [editRecord, setEditRecord] = useState(null);
+  const [editRecord, setEditRecord] = useState<any>(null);
+  const editStudentFormItems = (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-10">
+      {/* personal info */}
+      <div className="flex flex-col gap-5">
+        <CustomInput
+          name="firstName"
+          label="First Name"
+          defaultValue={editRecord?.firstName}
+        />
+        <CustomInput
+          name="lastName"
+          label="Last Name"
+          defaultValue={editRecord?.lastName}
+        />
+        <CustomSelect
+          items={[
+            {
+              label: "Male",
+              value: "male",
+              id: "male",
+              chipColor: "primary",
+            },
+            {
+              label: "Female",
+              value: "female",
+              id: "female",
+              chipColor: "secondary",
+            },
+          ]}
+          name="gender"
+          label="Gender"
+        />
+
+        <CustomDatePicker
+          label="Date of Birth"
+          name="dob"
+          placeholder="Date of Birth"
+        />
+        <CustomSelect
+          items={classes.map((c) => ({
+            label: c.name,
+            value: c._id,
+            id: c._id,
+            chipColor: "primary",
+          }))}
+          name="class"
+          label="Class"
+        />
+        <CustomInput name="address" label="Address" />
+      </div>
+      {/* personal info */}
+      <div className="flex flex-col gap-5">
+        <CustomSelect
+          items={[
+            {
+              label: "Male",
+              value: "male",
+              id: "male",
+              chipColor: "primary",
+            },
+            {
+              label: "Female",
+              value: "female",
+              id: "female",
+              chipColor: "secondary",
+            },
+          ]}
+          name="parent"
+          label="Parent"
+        />
+        <CustomSelect
+          items={[
+            {
+              label: "Male",
+              value: "male",
+              id: "male",
+              chipColor: "primary",
+            },
+            {
+              label: "Female",
+              value: "female",
+              id: "female",
+              chipColor: "secondary",
+            },
+          ]}
+          name="emergencyContactRelationship"
+          label="Emergency Contact Relationship"
+        />
+        <CustomInput
+          name="emergencyContactName"
+          label="Emergency Contact Name"
+        />
+        <CustomInput
+          name="emergencyContactPhone"
+          label="Emergency Contact Phone"
+        />
+
+        <UploadFileInput name="profileImage" />
+      </div>
+    </div>
+  );
 
   // navigation logic
   const navigate = useNavigate();
@@ -340,7 +444,7 @@ const AdminStudentsManagement = () => {
                 <TableCell>{student.firstName}</TableCell>
                 <TableCell>{student.lastName}</TableCell>
                 <TableCell>{student.lastName}</TableCell>
-                <TableCell>{student.lastName}</TableCell>
+                <TableCell>{student.class.name}</TableCell>
                 <TableCell>
                   <div className="relative flex items-center">
                     <Tooltip content="Details">
@@ -403,7 +507,7 @@ const AdminStudentsManagement = () => {
         isModalOpen={editRecordDisclosure.isOpen}
         onCloseModal={editRecordDisclosure.onClose}
       >
-        {"editRecordFormItems"}
+        {editStudentFormItems}
       </EditRecordModal>
 
       {/* delete modal */}

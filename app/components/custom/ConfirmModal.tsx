@@ -39,9 +39,7 @@ const ConfirmModal = ({
       for (const [key, value] of formData.entries()) {
         formValues[key] = value as string;
       }
-      //   stimulate a network request
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log(formValues);
+
       submit(
         {
           ...formValues,

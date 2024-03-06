@@ -98,7 +98,12 @@ const CreateRecordModal = ({
               {title}
             </ModalHeader>
             <ModalBody>
-              <Form method={"POST"} id="form" onSubmit={handleSubmit}>
+              <Form
+                method={"POST"}
+                id="form"
+                onSubmit={handleSubmit}
+                encType="multipart/form-data"
+              >
                 {children}
               </Form>
             </ModalBody>
