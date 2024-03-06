@@ -504,6 +504,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     page,
   });
 
+  console.log(classes);
+
   return { students, totalPages, search_term, user, page, classes };
 };
 
