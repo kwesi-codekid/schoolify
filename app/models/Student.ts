@@ -14,6 +14,7 @@ const StudentSchema = new mongoose.Schema(
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "classes",
     // },
+    profileImage: String,
     gender: {
       type: String,
       required: true,

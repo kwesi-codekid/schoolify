@@ -45,7 +45,6 @@ export default class StudentController {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
     const skipCount = (page - 1) * limit; // Calculate the number of documents to skip
-
     const searchFilter = search_term
       ? {
           $or: [
@@ -133,6 +132,7 @@ export default class StudentController {
     dob,
     studentClass,
     address,
+    profileImage,
   }: {
     path: string;
     firstName: string;
@@ -141,6 +141,7 @@ export default class StudentController {
     dob: string;
     studentClass: string;
     address: string;
+    profileImage: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -171,9 +172,8 @@ export default class StudentController {
         dob,
         class: studentClass,
         address,
+        profileImage,
       });
-
-      console.log(student, "createsd");
 
       if (!student) {
         session.flash("message", {
@@ -258,6 +258,7 @@ export default class StudentController {
     dob,
     studentClass,
     address,
+    profileImage,
   }: {
     path: string;
     _id: string;
@@ -267,6 +268,7 @@ export default class StudentController {
     dob: string;
     studentClass: string;
     address: string;
+    profileImage: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -278,6 +280,7 @@ export default class StudentController {
         dob,
         class: studentClass,
         address,
+        profileImage,
       });
 
       session.flash("message", {

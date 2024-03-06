@@ -14,9 +14,16 @@ const TeacherSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    profileImage: String,
     password: String,
     gender: String,
-    status: String,
+    employmentDate: Date,
+    address: String,
+    status: {
+      type: String,
+      default: "active",
+      enum: ["active", "inactive"],
+    },
     subjects: [
       {
         type: mongoose.Schema.Types.ObjectId,

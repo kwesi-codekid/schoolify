@@ -2,22 +2,27 @@ import CustomTable from "~/components/custom/CustomTable";
 import CustomInput from "~/components/custom/CustomInput";
 import CustomSelect from "~/components/custom/CustomSelect";
 import CustomDatePicker from "~/components/custom/CustomDatepicker";
-
 import AdminLayout from "~/layouts/AdminLayout";
 import { useEffect, useState } from "react";
 import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
-import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
+import TeacherController from "~/controllers/TeacherController";
+import { AdminInterface, TeacherInterface } from "~/types";
 
 const AdminTeachersManagement = () => {
-  const { students, totalPages, search_term, user, page } = useLoaderData();
+  const { teachers, totalPages, search_term, user, page } = useLoaderData<{
+    teachers: TeacherInterface[];
+    totalPages: number;
+    search_term: string;
+    user: AdminInterface;
+  }>();
 
-  const [studentData, setStudentData] = useState(students);
+  const [teachersData, setTeachersData] = useState(teachers);
 
   useEffect(() => {
-    setStudentData(students);
-  }, [students]);
+    setTeachersData(teachers);
+  }, [teachers]);
 
   const columns = [
     {
@@ -71,7 +76,6 @@ const AdminTeachersManagement = () => {
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <CustomInput name="address" label="Residential Address" />
         <CustomDatePicker label="Date of Employment" name="employmentDate" />
         <CustomInput name="address" label="Address" />
         <CustomInput name="password" label="Password" />
@@ -86,7 +90,7 @@ const AdminTeachersManagement = () => {
     <AdminLayout pageTitle="Teachers Management">
       <section className="p-4 backdrop-blur-[1px]">
         <CustomTable
-          items={studentData}
+          items={teachersData}
           totalPages={totalPages}
           columns={columns}
           addButtonText="Create Teacher"
@@ -110,36 +114,49 @@ export const action: ActionFunction = async ({ request }) => {
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
   const gender = formData.get("gender") as string;
-  const dob = formData.get("dob") as string;
-  const studentClass = formData.get("class") as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
 
   const intent = formData.get("intent") as string;
-  const studentController = await new StudentController(request);
+  const studentController = await new TeacherController(request);
 
   if (intent == "create") {
-    return await studentController.createStudent({
+    console.log({
+      firstName,
+      lastName,
+      gender,
+      email,
+      password,
+      address,
+      phone,
+    });
+
+    return await studentController.createTeacher({
       path,
       firstName,
       lastName,
       gender,
-      dob,
-      studentClass,
+      email,
+      password,
       address,
+      phone,
     });
   } else if (intent == "update") {
-    return await studentController.updateStudent({
+    return await studentController.updateTeacher({
       _id,
       path,
       firstName,
       lastName,
       gender,
-      dob,
-      studentClass,
+      email,
       address,
+      phone,
     });
   } else if (intent == "delete") {
-    return await studentController.deleteStudent({ _id, path });
+    return await studentController.deleteTeacher({ _id, path });
   } else {
     return true;
   }
@@ -156,18 +173,18 @@ export const loader: LoaderFunction = async ({ request }) => {
   const from = url.searchParams.get("from") as string;
   const to = url.searchParams.get("to") as string;
 
-  const studentController = await new StudentController(request);
-  const { students, totalPages } = await studentController.getStudents({
+  const studentController = await new TeacherController(request);
+  const { teachers, totalPages } = await studentController.getTeachers({
     page,
     search_term,
   });
 
-  return { students, totalPages, search_term, user, page };
+  return { teachers, totalPages, search_term, user, page };
 };
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Students | Schoolify" },
+    { title: "Teachers | Schoolify" },
     {
       name: "description",
       content: "Schoolify easily",
