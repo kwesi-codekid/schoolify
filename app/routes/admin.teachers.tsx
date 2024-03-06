@@ -124,16 +124,6 @@ export const action: ActionFunction = async ({ request }) => {
   const studentController = await new TeacherController(request);
 
   if (intent == "create") {
-    console.log({
-      firstName,
-      lastName,
-      gender,
-      email,
-      password,
-      address,
-      phone,
-    });
-
     return await studentController.createTeacher({
       path,
       firstName,

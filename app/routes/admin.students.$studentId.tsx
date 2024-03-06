@@ -26,7 +26,6 @@ import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
 import StudentController from "~/controllers/StudentController";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import {
-  Image,
   Table,
   TableHeader,
   TableColumn,
@@ -39,27 +38,21 @@ import {
   Button,
   Input,
   Pagination,
-  Chip,
 } from "@nextui-org/react";
 import CreateRecordModal from "~/components/custom/CreateRecordModal";
 import EditRecordModal from "~/components/custom/EditRecordModal";
 import ConfirmModal from "~/components/custom/ConfirmModal";
 
 const AdminStudentsManagement = () => {
-  const { students, totalPages, search_term, user, page, classes } =
-    useLoaderData();
+  const { student, search_term, user, page } = useLoaderData();
 
-  const [studentData, setStudentData] = useState(students);
+  const [studentData, setStudentData] = useState(student);
 
   useEffect(() => {
-    setStudentData(students);
-  }, [students]);
+    setStudentData(student);
+  }, [student]);
 
   const columns = [
-    {
-      key: "profileImage",
-      name: "Profile Image",
-    },
     {
       key: "firstName",
       name: "First Name",
@@ -76,11 +69,6 @@ const AdminStudentsManagement = () => {
       key: "class",
       name: "Class",
     },
-    {
-      key: "status",
-      name: "Status",
-    },
-
     {
       key: "actions",
       name: "Actions",
@@ -117,16 +105,7 @@ const AdminStudentsManagement = () => {
           name="dob"
           placeholder="Date of Birth"
         />
-        <CustomSelect
-          items={classes.map((c: any) => ({
-            label: c.name,
-            value: c._id,
-            id: c._id,
-            chipColor: "primary",
-          }))}
-          name="class"
-          label="Class"
-        />
+
         <CustomInput name="address" label="Address" />
       </div>
       {/* personal info */}
@@ -186,7 +165,6 @@ const AdminStudentsManagement = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-10">
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <Input className="hidden" name="_id" defaultValue={editRecord?._id} />
         <CustomInput
           name="firstName"
           label="First Name"
@@ -214,7 +192,6 @@ const AdminStudentsManagement = () => {
           ]}
           name="gender"
           label="Gender"
-          defaultKey={editRecord?.gender}
         />
 
         <CustomDatePicker
@@ -222,22 +199,8 @@ const AdminStudentsManagement = () => {
           name="dob"
           placeholder="Date of Birth"
         />
-        <CustomSelect
-          items={classes.map((c: object) => ({
-            label: c.name,
-            value: c._id,
-            id: c._id,
-            chipColor: "primary",
-          }))}
-          name="class"
-          label="Class"
-          defaultKey={editRecord?.class._id}
-        />
-        <CustomInput
-          name="address"
-          label="Address"
-          defaultValue={editRecord?.address}
-        />
+
+        <CustomInput name="address" label="Address" />
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
@@ -258,7 +221,6 @@ const AdminStudentsManagement = () => {
           ]}
           name="parent"
           label="Parent"
-          defaultKey={editRecord?.parent}
         />
         <CustomSelect
           items={[
@@ -285,25 +247,6 @@ const AdminStudentsManagement = () => {
         <CustomInput
           name="emergencyContactPhone"
           label="Emergency Contact Phone"
-        />
-
-        <CustomSelect
-          items={[
-            {
-              label: "Active",
-              value: "active",
-              id: "active",
-              chipColor: "success",
-            },
-            {
-              label: "Inactive",
-              value: "inactive",
-              id: "inactive",
-              chipColor: "danger",
-            },
-          ]}
-          name="status"
-          label="Status"
         />
 
         <UploadFileInput name="profileImage" />
@@ -408,165 +351,7 @@ const AdminStudentsManagement = () => {
 
   return (
     <AdminLayout pageTitle="Student Management">
-      <section className="p-4 backdrop-blur-[1px] flex flex-col gap-4">
-        {/* <CustomTable
-          items={studentData}
-          totalPages={totalPages}
-          columns={columns}
-          addButtonText="Register Student"
-          createRecordFormItems={registerStudentFormItems}
-          editRecord={editRecord}
-          setEditRecord={setEditRecord}
-        /> */}
-        {tableTopContent}
-        <Table
-          aria-label="Students Table"
-          sortDescriptor={list.sortDescriptor}
-          onSortChange={list.sort}
-          isHeaderSticky
-          classNames={{
-            wrapper: "!bg-slate-900/80",
-          }}
-          bottomContent={
-            totalPages > 1 ? (
-              <div className="flex w-full items-center">
-                <Pagination
-                  showControls
-                  showShadow
-                  color="primary"
-                  page={page}
-                  total={totalPages}
-                  onChange={(page) => {
-                    let baseUrl = location.pathname + location.search;
-                    const regex = /([?&]page=)\d+/g;
-
-                    if (
-                      baseUrl.includes("?page=") ||
-                      baseUrl.includes("&page=")
-                    ) {
-                      baseUrl = baseUrl.replace(regex, `$1${page}`);
-                    } else {
-                      baseUrl += baseUrl.includes("?")
-                        ? `&page=${page}`
-                        : `?page=${page}`;
-                    }
-
-                    navigate(baseUrl);
-                  }}
-                />
-              </div>
-            ) : null
-          }
-        >
-          <TableHeader className="!bg-blue-500">
-            {columns.map((column) => (
-              <TableColumn
-                className="font-montserrat bg-slate-900"
-                key={column.key}
-                allowsSorting
-              >
-                {column.name}
-              </TableColumn>
-            ))}
-          </TableHeader>
-          <TableBody
-            // items={list.items}
-            isLoading={isLoading}
-            loadingContent={<Spinner label="Loading..." />}
-            emptyContent={
-              isLoading ? (
-                <></>
-              ) : (
-                <div className="flex items-center justify-center flex-col gap-3">
-                  <img src={emptyFolderSVG} alt="No data" />
-                  <p className="font-nunito text-lg md:text-xl">
-                    No records found
-                  </p>
-                </div>
-              )
-            }
-          >
-            {list.items.map((student: any, index) => (
-              <TableRow key={index}>
-                <TableCell className="!w-16">
-                  <Image
-                    isZoomed
-                    src={student.profileImage}
-                    alt="profile image"
-                    radius="full"
-                    classNames={{
-                      img: "size-10",
-                    }}
-                  />
-                </TableCell>
-                <TableCell className="font-nunito text-sm">
-                  {student.firstName}
-                </TableCell>
-                <TableCell className="font-nunito text-sm">
-                  {student.lastName}
-                </TableCell>
-                <TableCell className="font-nunito text-sm">
-                  {student.gender}
-                </TableCell>
-                <TableCell className="font-nunito text-sm">
-                  {student.class.name}
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    variant="flat"
-                    classNames={{
-                      content: "font-nunito text-xs",
-                    }}
-                    size="sm"
-                    color={student.status === "active" ? "success" : "danger"}
-                  >
-                    {student.status}
-                  </Chip>
-                </TableCell>
-                <TableCell>
-                  <div className="relative flex items-center">
-                    <Tooltip content="Details">
-                      <Button
-                        variant="light"
-                        radius="full"
-                        color="default"
-                        isIconOnly
-                        size="sm"
-                      >
-                        <EyeOutlined className="size-4" />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip content="Edit user">
-                      <Button
-                        variant="light"
-                        radius="full"
-                        color="primary"
-                        isIconOnly
-                        size="sm"
-                        onClick={() => openEditRecordModal(student)}
-                      >
-                        <EditIcon className="size-4" />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip color="danger" content="Delete user">
-                      <Button
-                        onClick={() => openDeleteModal(student._id)}
-                        variant="light"
-                        radius="full"
-                        color="danger"
-                        isIconOnly
-                        size="sm"
-                      >
-                        <DeleteIcon className="size-4" />
-                      </Button>
-                    </Tooltip>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </section>
+      <section className="p-4 backdrop-blur-[1px]"></section>
 
       {/* create modal */}
       <CreateRecordModal
@@ -639,8 +424,6 @@ export const action: ActionFunction = async ({ request }) => {
       profileImage,
     });
   } else if (intent == "update") {
-    console.log({ _id, path });
-
     return await studentController.updateStudent({
       _id,
       path,
@@ -660,7 +443,8 @@ export const action: ActionFunction = async ({ request }) => {
   }
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const { studentId } = params;
   const adminController = await new AdminController(request);
   const user = await adminController.getAdmin();
 
@@ -672,18 +456,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const to = url.searchParams.get("to") as string;
 
   const studentController = await new StudentController(request);
-  const { students, totalPages } = await studentController.getStudents({
-    page,
-    search_term,
-  });
+  const student = await studentController.getStudent({ id: studentId });
 
-  const classController = await new ClassController(request);
-  const { classes } = await classController.getStudentClasss({
-    limit: 1000,
-    page,
-  });
-
-  return { students, totalPages, search_term, user, page, classes };
+  return { student, search_term, user, page };
 };
 
 export const meta: MetaFunction = () => {
