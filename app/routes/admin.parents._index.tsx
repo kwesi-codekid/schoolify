@@ -92,7 +92,7 @@ const AdminParentsManagement = () => {
       <CustomInput
         name="phone"
         label="Phone"
-        defaultValue={editRecord?.phone}
+        defaultValue={editRecord?.phoneNumber}
       />
       <CustomInput
         name="title"
