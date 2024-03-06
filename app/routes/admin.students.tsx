@@ -440,6 +440,7 @@ export const action: ActionFunction = async ({ request }) => {
   const address = formData.get("address") as string;
   const parent = formData.get("parent") as string;
   const profileImage = formData.get("profileImage") as string;
+  const status = formData.get("status") as string;
 
   const intent = formData.get("intent") as string;
   const studentController = await new StudentController(request);
@@ -466,6 +467,7 @@ export const action: ActionFunction = async ({ request }) => {
       studentClass,
       address,
       profileImage,
+      status,
     });
   } else if (intent == "delete") {
     return await studentController.deleteStudent({ _id, path });
