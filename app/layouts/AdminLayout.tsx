@@ -13,7 +13,7 @@ import { Link, useLocation } from "@remix-run/react";
 import { GridBackground } from "~/components/ui/grid-background";
 import { ThemeSwitcher } from "~/components/ThemeSwitcher";
 import { NotificationIcon } from "~/assets/icons/NotificationIcon";
-import { motion, AnimatePresence, MotionConfig } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 const AdminLayout = ({
@@ -308,7 +308,7 @@ const AdminLayout = ({
           <div className="flex flex-col gap-1">
             {navbarLinks.map((link, index) => {
               return (
-                <>
+                <div key={index}>
                   {link.children.length > 0 ? (
                     <Accordion
                       motionProps={{
@@ -389,7 +389,7 @@ const AdminLayout = ({
                       </span>
                     </Link>
                   )}
-                </>
+                </div>
               );
             })}
           </div>
