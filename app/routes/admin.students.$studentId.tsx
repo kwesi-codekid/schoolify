@@ -131,7 +131,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Students | Schoolify" },
+    { title: "Student Details | Schoolify" },
     {
       name: "description",
       content: "Schoolify easily",
