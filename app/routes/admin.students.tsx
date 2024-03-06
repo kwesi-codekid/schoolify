@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import CustomTable from "~/components/custom/CustomTable";
 import CustomInput from "~/components/custom/CustomInput";
 import CustomSelect from "~/components/custom/CustomSelect";
 import CustomDatePicker from "~/components/custom/CustomDatepicker";
@@ -14,6 +13,7 @@ import AdminLayout from "~/layouts/AdminLayout";
 import React, { useEffect, useState } from "react";
 import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
+import ClassController from "~/controllers/ClassController";
 import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
 import StudentController from "~/controllers/StudentController";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
@@ -34,7 +34,6 @@ import {
 import CreateRecordModal from "~/components/custom/CreateRecordModal";
 import EditRecordModal from "~/components/custom/EditRecordModal";
 import ConfirmModal from "~/components/custom/ConfirmModal";
-import ClassController from "~/controllers/ClassController";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
