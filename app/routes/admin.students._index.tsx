@@ -121,25 +121,7 @@ const AdminStudentsManagement = () => {
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <CustomSelect
-          items={[
-            {
-              label: "Male",
-              value: "male",
-              id: "male",
-              chipColor: "primary",
-            },
-            {
-              label: "Female",
-              value: "female",
-              id: "female",
-              chipColor: "secondary",
-            },
-          ]}
-          name="parent"
-          label="Parent"
-        />
-        <CustomComboBox name="parent1" label="Parent New" />
+        <CustomComboBox name="parent" label="Assign Parent" />
         <CustomSelect
           items={[
             {
@@ -238,24 +220,10 @@ const AdminStudentsManagement = () => {
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <CustomSelect
-          items={[
-            {
-              label: "Male",
-              value: "male",
-              id: "male",
-              chipColor: "primary",
-            },
-            {
-              label: "Female",
-              value: "female",
-              id: "female",
-              chipColor: "secondary",
-            },
-          ]}
+        <CustomComboBox
           name="parent"
-          label="Parent"
-          defaultKey={editRecord?.parent}
+          label="Assign Parent"
+          defaultValue={editRecord?.parent?._id}
         />
         <CustomSelect
           items={[

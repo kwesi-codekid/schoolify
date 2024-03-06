@@ -6,9 +6,11 @@ import { useEffect } from "react";
 export default function CustomComboBox({
   name,
   label,
+  defaultValue,
 }: {
   name: string;
   label: string;
+  defaultValue?: string;
 }) {
   const list = useAsyncList<any>({
     async load({ signal, filterText }) {
@@ -36,10 +38,11 @@ export default function CustomComboBox({
       items={list.items}
       label={label}
       onInputChange={list.setFilterText}
+      defaultSelectedKey={defaultValue}
     >
       {(item) => (
-        <AutocompleteItem key={item.firstName} className="capitalize">
-          {item.firstName} {item.lastName}
+        <AutocompleteItem key={item._id} className="capitalize">
+          {item.firstName + " " + item.lastName}
         </AutocompleteItem>
       )}
     </Autocomplete>
