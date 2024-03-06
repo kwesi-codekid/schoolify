@@ -263,6 +263,7 @@ export default class StudentController {
     studentClass,
     address,
     profileImage,
+    status,
   }: {
     path: string;
     _id: string;
@@ -273,6 +274,7 @@ export default class StudentController {
     studentClass: string;
     address: string;
     profileImage: string;
+    status: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -285,6 +287,7 @@ export default class StudentController {
         class: studentClass,
         address,
         profileImage,
+        status,
       });
 
       session.flash("message", {
