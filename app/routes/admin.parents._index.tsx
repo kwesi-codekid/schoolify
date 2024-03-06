@@ -45,7 +45,7 @@ const AdminParentsManagement = () => {
       name: "Email",
     },
     {
-      key: "phone",
+      key: "phoneNumber",
       name: "Phone",
     },
     {
@@ -73,7 +73,7 @@ const AdminParentsManagement = () => {
   const [editRecord, setEditRecord] = useState<any>(null);
   const editParentFormItems = (
     <div className="flex flex-col gap-5">
-      <Input type="hidden" name="_id" defaultValue={editRecord?._id} />
+      <Input className="hidden" name="_id" defaultValue={editRecord?._id} />
       <CustomInput
         name="firstName"
         label="First Name"
