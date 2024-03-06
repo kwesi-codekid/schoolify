@@ -16,6 +16,9 @@ const ParentSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    address: {
+      type: String,
+    },
     wards: [
       {
         type: mongoose.Schema.Types.ObjectId,

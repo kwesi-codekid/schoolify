@@ -128,21 +128,20 @@ export default class ParentController {
     path,
     firstName,
     lastName,
-    gender,
-    dob,
-    studentClass,
+    title,
+    phoneNumber,
     address,
+    email,
   }: {
     path: string;
     firstName: string;
     lastName: string;
-    gender: string;
-    dob: string;
-    studentClass: string;
+    title: string;
+    phoneNumber: string;
     address: string;
+    email: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-    const adminController = await new AdminController(this.request);
 
     try {
       const existingParent = await this.Parent.findOne({
@@ -165,10 +164,10 @@ export default class ParentController {
       const branch = await this.Parent.create({
         firstName,
         lastName,
-        gender,
-        dob,
-        class: studentClass,
+        title,
+        phoneNumber,
         address,
+        email,
       });
 
       if (!branch) {
@@ -250,19 +249,19 @@ export default class ParentController {
     _id,
     firstName,
     lastName,
-    gender,
-    dob,
-    studentClass,
+    title,
+    phoneNumber,
     address,
+    email,
   }: {
     path: string;
     _id: string;
     firstName: string;
     lastName: string;
-    gender: string;
-    dob: string;
-    studentClass: string;
+    title: string;
+    phoneNumber: string;
     address: string;
+    email: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -270,10 +269,10 @@ export default class ParentController {
       await this.Parent.findByIdAndUpdate(_id, {
         firstName,
         lastName,
-        gender,
-        dob,
-        class: studentClass,
+        title,
+        phoneNumber,
         address,
+        email,
       });
 
       session.flash("message", {
