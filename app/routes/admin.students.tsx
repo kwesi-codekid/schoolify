@@ -16,24 +16,8 @@ import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
 import StudentController from "~/controllers/StudentController";
-import { Form, useLoaderData, useNavigate } from "@remix-run/react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Spinner,
-  Tooltip,
-  useDisclosure,
-  Button,
-  Input,
-  Pagination,
-} from "@nextui-org/react";
-import CreateRecordModal from "~/components/custom/CreateRecordModal";
-import EditRecordModal from "~/components/custom/EditRecordModal";
-import ConfirmModal from "~/components/custom/ConfirmModal";
+import { useLoaderData } from "@remix-run/react";
+import ClassController from "~/controllers/ClassController";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
@@ -445,6 +429,8 @@ export const action: ActionFunction = async ({ request }) => {
   const dob = formData.get("dob") as string;
   const studentClass = formData.get("class") as string;
   const address = formData.get("address") as string;
+  const parent = formData.get("parent") as string;
+  const profileImage = formData.get("profileImage") as string;
 
   const intent = formData.get("intent") as string;
   const studentController = await new StudentController(request);
@@ -458,6 +444,7 @@ export const action: ActionFunction = async ({ request }) => {
       dob,
       studentClass,
       address,
+      profileImage,
     });
   } else if (intent == "update") {
     return await studentController.updateStudent({
@@ -469,6 +456,7 @@ export const action: ActionFunction = async ({ request }) => {
       dob,
       studentClass,
       address,
+      profileImage,
     });
   } else if (intent == "delete") {
     return await studentController.deleteStudent({ _id, path });
@@ -494,7 +482,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     search_term,
   });
 
-  return { students, totalPages, search_term, user, page };
+  const classController = await new ClassController(request);
+  const { classes } = await classController.getStudentClasss({
+    limit: 1000,
+    page,
+  });
+
+  return { students, totalPages, search_term, user, page, classes };
 };
 
 export const meta: MetaFunction = () => {

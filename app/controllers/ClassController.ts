@@ -43,7 +43,6 @@ export default class ClassController {
     totalPages: number;
   }> {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
-
     const skipCount = (page - 1) * limit; // Calculate the number of documents to skip
 
     const searchFilter = search_term
@@ -106,13 +105,10 @@ export default class ClassController {
 
   public async getStudentClass({ id }: { id: string }) {
     try {
-      const branch = await this.StudentClass.findById(id).populate("images");
-      // const reviews = await this.Reviews.find({ branch: id }).populate("user");
-
-      // branch.reviews = reviews;
-      return branch;
+      const classDetails = await this.StudentClass.findById(id);
+      return classDetails;
     } catch (error) {
-      console.error("Error retrieving branch:", error);
+      console.error("Error retrieving classDetails:", error);
     }
   }
 
