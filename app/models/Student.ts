@@ -14,6 +14,10 @@ const StudentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "classes",
     },
+    parent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "parents",
+    },
     profileImage: String,
     gender: {
       type: String,
