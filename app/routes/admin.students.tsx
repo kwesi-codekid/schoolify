@@ -536,6 +536,9 @@ const AdminStudentsManagement = () => {
                         color="default"
                         isIconOnly
                         size="sm"
+                        onPress={() => {
+                          navigate(`/admin/students/${student._id}`);
+                        }}
                       >
                         <EyeOutlined className="size-4" />
                       </Button>
