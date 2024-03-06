@@ -33,11 +33,14 @@ import {
   Input,
   Pagination,
   Chip,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import CreateRecordModal from "~/components/custom/CreateRecordModal";
 import EditRecordModal from "~/components/custom/EditRecordModal";
 import ConfirmModal from "~/components/custom/ConfirmModal";
 import CustomComboBox from "~/components/custom/CustomComboBox";
+import axios from "axios";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page, classes } =
@@ -48,6 +51,30 @@ const AdminStudentsManagement = () => {
   useEffect(() => {
     setStudentData(students);
   }, [students]);
+
+  // parents combobox logic
+  const [filterText, setFilterText] = useState("");
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [comboBoxLoading, setComboBoxLoading] = useState(false);
+  const getParentItems = async (searchText: string) => {
+    try {
+      setComboBoxLoading(true);
+      const response = await axios.get(
+        `/api/parents?search_term=${searchText}`
+      );
+      const items = response.data.map((item: any) => ({
+        label: `${item.firstName} ${item.lastName}`,
+        value: item._id,
+      }));
+      setFilteredItems(items);
+      setComboBoxLoading(false);
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    getParentItems(filterText);
+  }, [filterText]);
 
   const columns = [
     {
@@ -121,7 +148,13 @@ const AdminStudentsManagement = () => {
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <CustomComboBox name="parent" label="Assign Parent" />
+        <CustomComboBox
+          label="Parent"
+          items={filteredItems}
+          name="parent"
+          isLoading={comboBoxLoading}
+          setFilterText={setFilterText}
+        />
         <CustomSelect
           items={[
             {
@@ -220,11 +253,6 @@ const AdminStudentsManagement = () => {
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
-        <CustomComboBox
-          name="parent"
-          label="Assign Parent"
-          defaultValue={editRecord?.parent?._id}
-        />
         <CustomSelect
           items={[
             {

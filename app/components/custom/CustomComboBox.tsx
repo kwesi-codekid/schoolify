@@ -1,50 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
-import { useAsyncList } from "@react-stately/data";
-import { useEffect } from "react";
 
 export default function CustomComboBox({
-  name,
   label,
+  items,
   defaultValue,
+  name,
+  isLoading,
+  setFilterText,
 }: {
-  name: string;
   label: string;
+  items: any[];
   defaultValue?: string;
+  name?: string;
+  isLoading: boolean;
+  setFilterText: (value: string) => void;
 }) {
-  const list = useAsyncList<any>({
-    async load({ signal, filterText }) {
-      const res = await fetch(`/api/parents?search_term=${filterText}`, {
-        signal,
-      });
-      const json = await res.json();
-      console.log(json);
-
-      return {
-        items: json,
-      };
-    },
-  });
-
-  useEffect(() => {
-    console.log(list.items);
-  }, [list.items]);
+  const [value, setValue] = React.useState<any>(defaultValue);
 
   return (
-    <Autocomplete
-      name={name}
-      inputValue={list.filterText}
-      isLoading={list.isLoading}
-      items={list.items}
-      label={label}
-      onInputChange={list.setFilterText}
-      defaultSelectedKey={defaultValue}
-    >
-      {(item) => (
-        <AutocompleteItem key={item._id} className="capitalize">
-          {item.firstName + " " + item.lastName}
-        </AutocompleteItem>
-      )}
-    </Autocomplete>
+    <div className="flex w-full flex-col">
+      <input name={name} type="text" value={value} className="hidden" />
+      <Autocomplete
+        label={label}
+        allowsCustomValue
+        defaultItems={items}
+        selectedKey={value}
+        onSelectionChange={setValue}
+        isLoading={isLoading}
+        onInputChange={setFilterText}
+      >
+        {(item) => (
+          <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
+        )}
+      </Autocomplete>
+    </div>
   );
 }
