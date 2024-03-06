@@ -34,6 +34,7 @@ import {
 import CreateRecordModal from "~/components/custom/CreateRecordModal";
 import EditRecordModal from "~/components/custom/EditRecordModal";
 import ConfirmModal from "~/components/custom/ConfirmModal";
+import ClassController from "~/controllers/ClassController";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
