@@ -11,12 +11,12 @@ import { DeleteIcon } from "~/assets/icons/DeleteIcon";
 import { PlusIcon } from "~/assets/icons/PlusIcon";
 
 import AdminLayout from "~/layouts/AdminLayout";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
 import StudentController from "~/controllers/StudentController";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import {
   Table,
   TableHeader,
@@ -24,7 +24,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   Spinner,
   Tooltip,
   useDisclosure,
@@ -32,6 +31,9 @@ import {
   Input,
   Pagination,
 } from "@nextui-org/react";
+import CreateRecordModal from "~/components/custom/CreateRecordModal";
+import EditRecordModal from "~/components/custom/EditRecordModal";
+import ConfirmModal from "~/components/custom/ConfirmModal";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
@@ -200,12 +202,73 @@ const AdminStudentsManagement = () => {
   });
   useEffect(() => {
     list.reload();
-  }, [studentData, list]);
+  }, [studentData]);
+  // end table data:: useAsync logic, loading states
+
+  // delete record stuff
+  const deleteDisclosure = useDisclosure();
+  const [deleteId, setDeleteId] = React.useState<string>("");
+  const openDeleteModal = (deleteId: string) => {
+    setDeleteId(deleteId);
+    deleteDisclosure.onOpen();
+  };
+
+  // create record stuff
+  const createRecordDisclosure = useDisclosure();
+  const openCreateRecordModal = () => {
+    createRecordDisclosure.onOpen();
+  };
+
+  // edit record stuff
+  const editRecordDisclosure = useDisclosure();
+  const openEditRecordModal = (record: any) => {
+    setEditRecord(record);
+    editRecordDisclosure.onOpen();
+  };
+
+  // table top content
+  const tableTopContent = (
+    <div className="flex items-center justify-between">
+      <div className="w-1/3 rounded-xl flex items-center gap-2">
+        <Form method="get" className="flex items-center justify-center gap-2">
+          <Input
+            className="rounded-xl"
+            classNames={{
+              inputWrapper: "!h-10",
+            }}
+            name="search_term"
+            radius="lg"
+            defaultValue={search_term}
+            size="sm"
+          />
+          <Button
+            className="h-10 font-montserrat"
+            color="primary"
+            variant="flat"
+            type="submit"
+          >
+            Search
+          </Button>
+        </Form>
+      </div>
+      <Button
+        className="font-montserrat"
+        size="md"
+        color="primary"
+        startContent={<PlusIcon />}
+        onPress={openCreateRecordModal}
+      >
+        <Input className="hidden" name="intent" value={"create"} />
+        Register Student
+      </Button>
+    </div>
+  );
+  // end table top content
 
   return (
     <AdminLayout pageTitle="Student Management">
       <section className="p-4 backdrop-blur-[1px]">
-        <CustomTable
+        {/* <CustomTable
           items={studentData}
           totalPages={totalPages}
           columns={columns}
@@ -213,9 +276,9 @@ const AdminStudentsManagement = () => {
           createRecordFormItems={registerStudentFormItems}
           editRecord={editRecord}
           setEditRecord={setEditRecord}
-        />
-
-        {/* <Table
+        /> */}
+        {tableTopContent}
+        <Table
           aria-label="Students Table"
           sortDescriptor={list.sortDescriptor}
           onSortChange={list.sort}
@@ -263,7 +326,7 @@ const AdminStudentsManagement = () => {
             ))}
           </TableHeader>
           <TableBody
-            items={list.items}
+            // items={list.items}
             isLoading={isLoading}
             loadingContent={<Spinner label="Loading..." />}
             emptyContent={
@@ -279,16 +342,91 @@ const AdminStudentsManagement = () => {
               )
             }
           >
-            {studentData.map((student: any, index: number) => (
+            {list.items.map((student: any, index) => (
               <TableRow key={index}>
-                {(columnKey) => (
-                  <TableCell>{getKeyValue(student, columnKey)}</TableCell>
-                )}
+                <TableCell>{student.firstName}</TableCell>
+                <TableCell>{student.lastName}</TableCell>
+                <TableCell>{student.lastName}</TableCell>
+                <TableCell>{student.lastName}</TableCell>
+                <TableCell>
+                  <div className="relative flex items-center">
+                    <Tooltip content="Details">
+                      <Button
+                        variant="light"
+                        radius="full"
+                        color="default"
+                        isIconOnly
+                        size="sm"
+                      >
+                        <EyeOutlined className="size-4" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip content="Edit user">
+                      <Button
+                        variant="light"
+                        radius="full"
+                        color="primary"
+                        isIconOnly
+                        size="sm"
+                        onClick={() => openEditRecordModal(student)}
+                      >
+                        <EditIcon className="size-4" />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip color="danger" content="Delete user">
+                      <Button
+                        onClick={() => openDeleteModal(student._id)}
+                        variant="light"
+                        radius="full"
+                        color="danger"
+                        isIconOnly
+                        size="sm"
+                      >
+                        <DeleteIcon className="size-4" />
+                      </Button>
+                    </Tooltip>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
-        </Table> */}
+        </Table>
       </section>
+
+      {/* create modal */}
+      <CreateRecordModal
+        title="Create Record"
+        isModalOpen={createRecordDisclosure.isOpen}
+        onCloseModal={createRecordDisclosure.onClose}
+        size={"5xl"}
+      >
+        {registerStudentFormItems}
+      </CreateRecordModal>
+
+      {/* edit modal */}
+      <EditRecordModal
+        record={editRecord}
+        title="Edit Record"
+        isModalOpen={editRecordDisclosure.isOpen}
+        onCloseModal={editRecordDisclosure.onClose}
+      >
+        {"editRecordFormItems"}
+      </EditRecordModal>
+
+      {/* delete modal */}
+      <ConfirmModal
+        title="Delete Record"
+        isModalOpen={deleteDisclosure.isOpen}
+        onCloseModal={deleteDisclosure.onClose}
+        formMethod="POST"
+        formAction=""
+      >
+        <Input className="hidden" name="intent" value={"delete"} />
+        <Input className="hidden" name="_id" value={deleteId} />
+        <p className="font-nunito">
+          Are you sure you want to delete this user?
+        </p>
+      </ConfirmModal>
     </AdminLayout>
   );
 };
