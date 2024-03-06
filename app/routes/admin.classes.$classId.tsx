@@ -13,7 +13,6 @@ import ClassController from "~/controllers/ClassController";
 
 const AdminClassesManagement = () => {
   const { classDetails, totalPages, search_term, user, page } = useLoaderData();
-  console.log(classDetails);
 
   const items = [
     // {
@@ -131,7 +130,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { classId } = params;
   const adminController = await new AdminController(request);
   const user = await adminController.getAdmin();
-  console.log({ classId });
 
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get("page") as string) || 1;
@@ -150,8 +148,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     limit: 150,
     classId,
   });
-
-  console.log({ students });
 
   return { classDetails, students, search_term, user, page };
 };

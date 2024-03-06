@@ -416,7 +416,6 @@ export default class ProductController {
     // Wait for all promises to resolve
     const results = await Promise.all(imagePromises);
     const successfulResults = results.filter((result) => result !== null);
-    console.log(successfulResults);
 
     try {
       const product = await this.Product.findById(productId);

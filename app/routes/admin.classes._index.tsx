@@ -13,7 +13,6 @@ import ClassController from "~/controllers/ClassController";
 
 const AdminClassesManagement = () => {
   const { classes, totalPages, search_term, user, page } = useLoaderData();
-  console.log(classes);
 
   const items = [
     // {
