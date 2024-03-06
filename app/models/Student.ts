@@ -10,10 +10,10 @@ const StudentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // class: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "classes",
-    // },
+    class: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "classes",
+    },
     profileImage: String,
     gender: {
       type: String,

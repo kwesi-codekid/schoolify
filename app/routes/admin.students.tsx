@@ -9,6 +9,7 @@ import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
+import ClassController from "~/controllers/ClassController";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page } = useLoaderData();
@@ -225,7 +226,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     search_term,
   });
 
-  return { students, totalPages, search_term, user, page };
+  const classController = await new ClassController(request);
+  const { classes } = await classController.getStudentClasss({
+    limit: 1000,
+    page,
+  });
+
+  return { students, totalPages, search_term, user, page, classes };
 };
 
 export const meta: MetaFunction = () => {

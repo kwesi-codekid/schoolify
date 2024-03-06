@@ -34,10 +34,12 @@ export default class StudentController {
     page,
     search_term,
     limit = 10,
+    classId,
   }: {
     page: number;
     search_term?: string;
     limit?: number;
+    classId?: string;
   }): Promise<{
     students: StudentInterface[];
     totalPages: number;
@@ -73,6 +75,10 @@ export default class StudentController {
           ],
         }
       : {};
+
+    if (classId) {
+      searchFilter.class = classId;
+    }
 
     try {
       const students = await this.Student.find(searchFilter)
