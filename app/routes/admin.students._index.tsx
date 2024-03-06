@@ -37,6 +37,7 @@ import {
 import CreateRecordModal from "~/components/custom/CreateRecordModal";
 import EditRecordModal from "~/components/custom/EditRecordModal";
 import ConfirmModal from "~/components/custom/ConfirmModal";
+import CustomComboBox from "~/components/custom/CustomComboBox";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page, classes } =
@@ -138,6 +139,7 @@ const AdminStudentsManagement = () => {
           name="parent"
           label="Parent"
         />
+        <CustomComboBox name="parent1" label="Parent New" />
         <CustomSelect
           items={[
             {
