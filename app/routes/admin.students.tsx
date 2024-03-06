@@ -108,7 +108,7 @@ const AdminStudentsManagement = () => {
           placeholder="Date of Birth"
         />
         <CustomSelect
-          items={classes.map((c) => ({
+          items={classes.map((c: any) => ({
             label: c.name,
             value: c._id,
             id: c._id,
@@ -541,30 +541,7 @@ export const action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);
   const path = url.pathname + url.search;
 
-  const uploadHandler = unstable_composeUploadHandlers(
-    // our custom upload handler
-    async ({ name, contentType, data, filename }) => {
-      if (name !== "profileImage") {
-        return undefined;
-      }
-      const buffer = [];
-      for await (const chunk of data) {
-        buffer.push(chunk);
-      }
-      const fileBuffer = Buffer.concat(buffer);
-      const base64Data = fileBuffer.toString("base64");
-      return `data:${contentType};base64,` + base64Data;
-    },
-    // fallback to memory for everything else
-    unstable_createMemoryUploadHandler()
-  );
-
-  const formData = await unstable_parseMultipartFormData(
-    request,
-    uploadHandler
-  );
-
-  // const formData = await request.formData();
+  const formData = await request.formData();
   const _id = formData.get("_id") as string;
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
