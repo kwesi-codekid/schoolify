@@ -10,6 +10,7 @@ import AdminController from "~/controllers/AdminController";
 import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
 import ClassController from "~/controllers/ClassController";
+import { Input } from "@nextui-org/react";
 
 const AdminClassesManagement = () => {
   const { classes, totalPages, search_term, user, page } = useLoaderData();
@@ -70,6 +71,40 @@ const AdminClassesManagement = () => {
   );
 
   const [editRecord, setEditRecord] = useState(null);
+  const editClassFormItems = (
+    <div className="flex flex-col gap-5">
+      <Input className="hidden" name="_id" defaultValue={editRecord?._id} />
+      <CustomInput
+        name="className"
+        label="Class Name"
+        defaultValue={editRecord?.name}
+      />
+      <CustomSelect
+        items={[
+          {
+            label: "Male",
+            value: "male",
+            id: "male",
+            chipColor: "primary",
+          },
+          {
+            label: "Female",
+            value: "female",
+            id: "female",
+            chipColor: "secondary",
+          },
+        ]}
+        name="classTeacher"
+        label="Class Teacher"
+        defaultKey={editRecord?.teacher}
+      />
+      <CustomInput
+        name="description"
+        label="Description"
+        defaultValue={editRecord?.description}
+      />
+    </div>
+  );
 
   return (
     <AdminLayout pageTitle="Classes Management">
@@ -81,6 +116,7 @@ const AdminClassesManagement = () => {
           addButtonText="New Class"
           createRecordFormItems={createClassFormItems}
           createRecordModalSize="md"
+          editRecordFormItems={editClassFormItems}
           editRecord={editRecord}
           setEditRecord={setEditRecord}
         />

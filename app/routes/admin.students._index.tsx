@@ -12,14 +12,7 @@ import { PlusIcon } from "~/assets/icons/PlusIcon";
 
 import AdminLayout from "~/layouts/AdminLayout";
 import React, { useEffect, useState } from "react";
-import {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-  unstable_composeUploadHandlers,
-  unstable_createMemoryUploadHandler,
-  unstable_parseMultipartFormData,
-} from "@remix-run/node";
+import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import ClassController from "~/controllers/ClassController";
 import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
@@ -493,15 +486,25 @@ const AdminStudentsManagement = () => {
             {list.items.map((student: any, index) => (
               <TableRow key={index}>
                 <TableCell className="!w-16">
-                  <Image
-                    isZoomed
-                    src={student.profileImage}
-                    alt="profile image"
-                    radius="full"
-                    classNames={{
-                      img: "size-10",
-                    }}
-                  />
+                  {student.profileImage === "" ? (
+                    // show intials
+                    <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                      <p className="font-nunito text-sm text-white">
+                        {student.firstName.charAt(0).toUpperCase()}
+                        {student.lastName.charAt(0).toUpperCase()}
+                      </p>
+                    </div>
+                  ) : (
+                    <Image
+                      isZoomed
+                      src={student.profileImage}
+                      alt="profile image"
+                      radius="full"
+                      classNames={{
+                        img: "size-10",
+                      }}
+                    />
+                  )}
                 </TableCell>
                 <TableCell className="font-nunito text-sm">
                   {student.firstName}
