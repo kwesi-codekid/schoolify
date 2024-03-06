@@ -21,7 +21,7 @@ const CustomSelect = ({
   isInvalid?: boolean;
   errorMessage?: string;
   isRequired?: boolean;
-  defaultKey?: any;
+  defaultKey?: string;
 }) => {
   return (
     <Select
@@ -45,6 +45,7 @@ const CustomSelect = ({
       isInvalid={isInvalid}
       errorMessage={errorMessage}
       isRequired={isRequired}
+      defaultSelectedKeys={defaultKey ? [defaultKey] : []}
       renderValue={(items) => {
         return (
           <div className="py-2">

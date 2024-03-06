@@ -26,6 +26,7 @@ import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
 import StudentController from "~/controllers/StudentController";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import {
+  Image,
   Table,
   TableHeader,
   TableColumn,
@@ -38,6 +39,7 @@ import {
   Button,
   Input,
   Pagination,
+  Chip,
 } from "@nextui-org/react";
 import CreateRecordModal from "~/components/custom/CreateRecordModal";
 import EditRecordModal from "~/components/custom/EditRecordModal";
@@ -56,6 +58,10 @@ const AdminStudentsManagement = () => {
 
   const columns = [
     {
+      key: "profileImage",
+      name: "Profile Image",
+    },
+    {
       key: "firstName",
       name: "First Name",
     },
@@ -71,6 +77,11 @@ const AdminStudentsManagement = () => {
       key: "class",
       name: "Class",
     },
+    {
+      key: "status",
+      name: "Status",
+    },
+
     {
       key: "actions",
       name: "Actions",
@@ -176,6 +187,7 @@ const AdminStudentsManagement = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-10">
       {/* personal info */}
       <div className="flex flex-col gap-5">
+        <Input className="hidden" name="_id" defaultValue={editRecord?._id} />
         <CustomInput
           name="firstName"
           label="First Name"
@@ -203,6 +215,7 @@ const AdminStudentsManagement = () => {
           ]}
           name="gender"
           label="Gender"
+          defaultKey={editRecord?.gender}
         />
 
         <CustomDatePicker
@@ -211,7 +224,7 @@ const AdminStudentsManagement = () => {
           placeholder="Date of Birth"
         />
         <CustomSelect
-          items={classes.map((c) => ({
+          items={classes.map((c: object) => ({
             label: c.name,
             value: c._id,
             id: c._id,
@@ -219,8 +232,13 @@ const AdminStudentsManagement = () => {
           }))}
           name="class"
           label="Class"
+          defaultKey={editRecord?.class._id}
         />
-        <CustomInput name="address" label="Address" />
+        <CustomInput
+          name="address"
+          label="Address"
+          defaultValue={editRecord?.address}
+        />
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
@@ -241,6 +259,7 @@ const AdminStudentsManagement = () => {
           ]}
           name="parent"
           label="Parent"
+          defaultKey={editRecord?.parent}
         />
         <CustomSelect
           items={[
@@ -267,6 +286,25 @@ const AdminStudentsManagement = () => {
         <CustomInput
           name="emergencyContactPhone"
           label="Emergency Contact Phone"
+        />
+
+        <CustomSelect
+          items={[
+            {
+              label: "Active",
+              value: "active",
+              id: "active",
+              chipColor: "success",
+            },
+            {
+              label: "Inactive",
+              value: "inactive",
+              id: "inactive",
+              chipColor: "danger",
+            },
+          ]}
+          name="status"
+          label="Status"
         />
 
         <UploadFileInput name="profileImage" />
@@ -371,7 +409,7 @@ const AdminStudentsManagement = () => {
 
   return (
     <AdminLayout pageTitle="Student Management">
-      <section className="p-4 backdrop-blur-[1px]">
+      <section className="p-4 backdrop-blur-[1px] flex flex-col gap-4">
         {/* <CustomTable
           items={studentData}
           totalPages={totalPages}
@@ -387,8 +425,11 @@ const AdminStudentsManagement = () => {
           sortDescriptor={list.sortDescriptor}
           onSortChange={list.sort}
           isHeaderSticky
+          classNames={{
+            wrapper: "!bg-slate-900/80",
+          }}
           bottomContent={
-            totalPages > 0 ? (
+            totalPages > 1 ? (
               <div className="flex w-full items-center">
                 <Pagination
                   showControls
@@ -448,10 +489,41 @@ const AdminStudentsManagement = () => {
           >
             {list.items.map((student: any, index) => (
               <TableRow key={index}>
-                <TableCell>{student.firstName}</TableCell>
-                <TableCell>{student.lastName}</TableCell>
-                <TableCell>{student.lastName}</TableCell>
-                <TableCell>{student.class.name}</TableCell>
+                <TableCell className="!w-16">
+                  <Image
+                    isZoomed
+                    src={student.profileImage}
+                    alt="profile image"
+                    radius="full"
+                    classNames={{
+                      img: "size-10",
+                    }}
+                  />
+                </TableCell>
+                <TableCell className="font-nunito text-sm">
+                  {student.firstName}
+                </TableCell>
+                <TableCell className="font-nunito text-sm">
+                  {student.lastName}
+                </TableCell>
+                <TableCell className="font-nunito text-sm">
+                  {student.gender}
+                </TableCell>
+                <TableCell className="font-nunito text-sm">
+                  {student.class.name}
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    variant="flat"
+                    classNames={{
+                      content: "font-nunito text-xs",
+                    }}
+                    size="sm"
+                    color={student.status === "active" ? "success" : "danger"}
+                  >
+                    {student.status}
+                  </Chip>
+                </TableCell>
                 <TableCell>
                   <div className="relative flex items-center">
                     <Tooltip content="Details">

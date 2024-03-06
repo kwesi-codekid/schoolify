@@ -109,7 +109,7 @@ const ConfirmModal = ({
                 type="submit"
                 form="form"
               >
-                Action
+                Confirm
               </Button>
             </ModalFooter>
           </>
