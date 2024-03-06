@@ -1,37 +1,3 @@
-export type ProductInterface = {
-  _id: string; //Types.ObjectId
-  name: string;
-  description: string;
-  quantity: number;
-  quantitySold: number;
-  costPrice: number;
-  price: number;
-  images: ImageInterface[];
-  category: CategoryInterface;
-  availability: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type ImageInterface = {
-  _id: string;
-  name: string;
-  url: string;
-  size: number;
-  type: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type CategoryInterface = {
-  _id: string;
-  name: string;
-  description: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 export type AdminInterface = {
   _id: string;
   username: string;
@@ -51,6 +17,17 @@ export type UserInterface = {
   password: string;
   phone: string;
   profileImage: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type ParentInterface = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  phone: string;
   createdAt: Date;
   updatedAt: Date;
 };

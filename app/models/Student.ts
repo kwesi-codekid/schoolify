@@ -39,6 +39,9 @@ const StudentSchema = new mongoose.Schema(
       phone: {
         type: String,
       },
+      relationship: {
+        type: String,
+      },
     },
     fees: [
       {
