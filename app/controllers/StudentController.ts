@@ -84,9 +84,7 @@ export default class StudentController {
       const students = await this.Student.find(searchFilter)
         .skip(skipCount)
         .limit(limit)
-        // .populate("church")
-        // .populate("denomination")
-        // .populate("appointingOfficer")
+        .populate("class")
         .sort({ name: "asc" })
         .exec();
 

@@ -36,7 +36,8 @@ import EditRecordModal from "~/components/custom/EditRecordModal";
 import ConfirmModal from "~/components/custom/ConfirmModal";
 
 const AdminStudentsManagement = () => {
-  const { students, totalPages, search_term, user, page } = useLoaderData();
+  const { students, totalPages, search_term, user, page, classes } =
+    useLoaderData();
   console.log(students);
 
   const [studentData, setStudentData] = useState(students);
@@ -99,20 +100,12 @@ const AdminStudentsManagement = () => {
           placeholder="Date of Birth"
         />
         <CustomSelect
-          items={[
-            {
-              label: "Male",
-              value: "male",
-              id: "male",
-              chipColor: "primary",
-            },
-            {
-              label: "Female",
-              value: "female",
-              id: "female",
-              chipColor: "secondary",
-            },
-          ]}
+          items={classes.map((c) => ({
+            label: c.name,
+            value: c._id,
+            id: c._id,
+            chipColor: "primary",
+          }))}
           name="class"
           label="Class"
         />
