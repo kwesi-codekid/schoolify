@@ -135,9 +135,12 @@ export const action: ActionFunction = async ({ request }) => {
 
   const formData = await request.formData();
   const _id = formData.get("_id") as string;
-  const className = formData.get("className") as string;
-  const classTeacher = formData.get("classTeacher") as string;
-  const description = formData.get("description") as string;
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
+  const address = formData.get("address") as string;
+  const title = formData.get("title") as string;
 
   const intent = formData.get("intent") as string;
   const classController = await new ParentController(request);
@@ -145,17 +148,23 @@ export const action: ActionFunction = async ({ request }) => {
   if (intent == "create") {
     return await classController.createParent({
       path,
-      name: className,
-      teacher: classTeacher,
-      description,
+      firstName,
+      lastName,
+      email,
+      phoneNumber: phone,
+      address,
+      title,
     });
   } else if (intent == "update") {
     return await classController.updateParent({
       _id,
       path,
-      name: className,
-      teacher: classTeacher,
-      description,
+      firstName,
+      lastName,
+      email,
+      phoneNumber: phone,
+      address,
+      title,
     });
   } else if (intent == "delete") {
     return await classController.deleteParent({ _id, path });
@@ -190,7 +199,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Students | Schoolify" },
+    { title: "Parents | Schoolify" },
     {
       name: "description",
       content: "Schoolify easily",

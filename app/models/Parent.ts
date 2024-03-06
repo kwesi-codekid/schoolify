@@ -19,6 +19,9 @@ const ParentSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    title: {
+      type: String,
+    },
     wards: [
       {
         type: mongoose.Schema.Types.ObjectId,
