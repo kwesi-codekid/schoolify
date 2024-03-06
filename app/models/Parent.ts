@@ -16,6 +16,12 @@ const ParentSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    address: {
+      type: String,
+    },
+    title: {
+      type: String,
+    },
     wards: [
       {
         type: mongoose.Schema.Types.ObjectId,
