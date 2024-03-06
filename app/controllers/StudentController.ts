@@ -111,10 +111,7 @@ export default class StudentController {
 
   public async getStudent({ id }: { id: string }) {
     try {
-      const student = await this.Student.findById(id).populate("images");
-      // const reviews = await this.Reviews.find({ student: id }).populate("user");
-
-      // student.reviews = reviews;
+      const student = await this.Student.findById(id);
       return student;
     } catch (error) {
       console.error("Error retrieving student:", error);

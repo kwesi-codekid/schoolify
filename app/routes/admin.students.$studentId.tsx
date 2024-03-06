@@ -456,7 +456,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const to = url.searchParams.get("to") as string;
 
   const studentController = await new StudentController(request);
-  const student = await studentController.getStudent({ id: studentId });
+  const student = await studentController.getStudent({
+    id: studentId as string,
+  });
 
   return { student, search_term, user, page };
 };

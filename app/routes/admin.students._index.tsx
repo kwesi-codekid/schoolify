@@ -48,7 +48,6 @@ import ConfirmModal from "~/components/custom/ConfirmModal";
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page, classes } =
     useLoaderData<any>();
-  console.log(students);
 
   const [studentData, setStudentData] = useState(students);
 
@@ -652,8 +651,6 @@ export const action: ActionFunction = async ({ request }) => {
       emergencyContactRelationship,
     });
   } else if (intent == "update") {
-    console.log({ _id, path });
-
     return await studentController.updateStudent({
       _id,
       path,
