@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
+import { useEffect } from "react";
 
 export default function CustomComboBox({
   name,
@@ -11,7 +12,7 @@ export default function CustomComboBox({
 }) {
   const list = useAsyncList<any>({
     async load({ signal, filterText }) {
-      const res = await fetch(`api/parents?search_term=${filterText}`, {
+      const res = await fetch(`/api/parents?search_term=${filterText}`, {
         signal,
       });
       const json = await res.json();
@@ -21,6 +22,10 @@ export default function CustomComboBox({
       };
     },
   });
+
+  useEffect(() => {
+    console.log(list.items);
+  }, [list.items]);
 
   return (
     <Autocomplete
@@ -32,8 +37,8 @@ export default function CustomComboBox({
       onInputChange={list.setFilterText}
     >
       {(item) => (
-        <AutocompleteItem key={item.name} className="capitalize">
-          {item.name}
+        <AutocompleteItem key={item.firstName} className="capitalize">
+          {item.firstName} {item.lastName}
         </AutocompleteItem>
       )}
     </Autocomplete>
