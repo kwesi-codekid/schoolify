@@ -49,7 +49,7 @@ const CustomSelect = ({
       renderValue={(items) => {
         return (
           <div className="py-2">
-            {items.map((item) => (
+            {items.map((item: any) => (
               <Chip variant="flat" size="sm" key={item.key}>
                 {item.data.label}
               </Chip>

@@ -47,7 +47,8 @@ import ConfirmModal from "~/components/custom/ConfirmModal";
 
 const AdminStudentsManagement = () => {
   const { students, totalPages, search_term, user, page, classes } =
-    useLoaderData();
+    useLoaderData<any>();
+  console.log(students);
 
   const [studentData, setStudentData] = useState(students);
 
@@ -223,7 +224,7 @@ const AdminStudentsManagement = () => {
           placeholder="Date of Birth"
         />
         <CustomSelect
-          items={classes.map((c: object) => ({
+          items={classes.map((c: any) => ({
             label: c.name,
             value: c._id,
             id: c._id,
@@ -281,10 +282,12 @@ const AdminStudentsManagement = () => {
         <CustomInput
           name="emergencyContactName"
           label="Emergency Contact Name"
+          defaultValue={editRecord?.emergencyContact?.name}
         />
         <CustomInput
           name="emergencyContactPhone"
           label="Emergency Contact Phone"
+          defaultValue={editRecord?.emergencyContact?.phone}
         />
 
         <CustomSelect
@@ -304,6 +307,7 @@ const AdminStudentsManagement = () => {
           ]}
           name="status"
           label="Status"
+          defaultKey={editRecord?.status}
         />
 
         <UploadFileInput name="profileImage" />
@@ -324,9 +328,9 @@ const AdminStudentsManagement = () => {
         items: studentData,
       };
     },
-    async sort({ items, sortDescriptor }) {
+    async sort({ items, sortDescriptor }: { items: any; sortDescriptor: any }) {
       return {
-        items: items.sort((a, b) => {
+        items: items.sort((a: any, b: any) => {
           const first = a[sortDescriptor.column];
           const second = b[sortDescriptor.column];
           let cmp =
