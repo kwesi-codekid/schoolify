@@ -1,10 +1,23 @@
 import { LoaderFunction, MetaFunction } from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import AdminLayout from "~/layouts/AdminLayout";
+import Datepicker from "react-tailwindcss-datepicker";
+import { useState } from "react";
 
 const AdminDashboard = () => {
+  const [value, setValue] = useState({
+    startDate: new Date(),
+    endDate: new Date().setMonth(11),
+  });
+
+  const handleValueChange = (newValue) => {
+    console.log("newValue:", newValue);
+    setValue(newValue);
+  };
+
   return (
     <AdminLayout pageTitle="Dashboard">
+      <Datepicker asSingle value={value} onChange={handleValueChange} />
       <h1>Admin Dashboard</h1>
     </AdminLayout>
   );
