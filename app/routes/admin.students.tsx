@@ -11,7 +11,14 @@ import { PlusIcon } from "~/assets/icons/PlusIcon";
 
 import AdminLayout from "~/layouts/AdminLayout";
 import React, { useEffect, useState } from "react";
-import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
+import {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+  unstable_composeUploadHandlers,
+  unstable_createMemoryUploadHandler,
+  unstable_parseMultipartFormData,
+} from "@remix-run/node";
 import AdminController from "~/controllers/AdminController";
 import ClassController from "~/controllers/ClassController";
 import emptyFolderSVG from "~/assets/svgs/empty_folder.svg";
@@ -430,7 +437,30 @@ export const action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);
   const path = url.pathname + url.search;
 
-  const formData = await request.formData();
+  const uploadHandler = unstable_composeUploadHandlers(
+    // our custom upload handler
+    async ({ name, contentType, data, filename }) => {
+      if (name !== "profileImage") {
+        return undefined;
+      }
+      const buffer = [];
+      for await (const chunk of data) {
+        buffer.push(chunk);
+      }
+      const fileBuffer = Buffer.concat(buffer);
+      const base64Data = fileBuffer.toString("base64");
+      return `data:${contentType};base64,` + base64Data;
+    },
+    // fallback to memory for everything else
+    unstable_createMemoryUploadHandler()
+  );
+
+  const formData = await unstable_parseMultipartFormData(
+    request,
+    uploadHandler
+  );
+
+  // const formData = await request.formData();
   const _id = formData.get("_id") as string;
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
