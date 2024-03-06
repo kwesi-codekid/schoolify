@@ -32,6 +32,14 @@ const StudentSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    emergencyContact: {
+      name: {
+        type: String,
+      },
+      phone: {
+        type: String,
+      },
+    },
     fees: [
       {
         type: mongoose.Schema.Types.ObjectId,

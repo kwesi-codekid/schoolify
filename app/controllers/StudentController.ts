@@ -137,6 +137,9 @@ export default class StudentController {
     studentClass,
     address,
     profileImage,
+    parent,
+    emergencyContactName,
+    emergencyContactPhone,
   }: {
     path: string;
     firstName: string;
@@ -146,6 +149,9 @@ export default class StudentController {
     studentClass: string;
     address: string;
     profileImage: string;
+    parent: string;
+    emergencyContactName: string;
+    emergencyContactPhone: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -177,6 +183,11 @@ export default class StudentController {
         class: studentClass,
         address,
         profileImage,
+        parent,
+        emergencyContact: {
+          name: emergencyContactName,
+          phone: emergencyContactPhone,
+        },
       });
 
       if (!student) {
@@ -264,6 +275,9 @@ export default class StudentController {
     address,
     profileImage,
     status,
+    parent,
+    emergencyContactName,
+    emergencyContactPhone,
   }: {
     path: string;
     _id: string;
@@ -275,6 +289,9 @@ export default class StudentController {
     address: string;
     profileImage: string;
     status: string;
+    parent: string;
+    emergencyContactName: string;
+    emergencyContactPhone: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
 
@@ -288,6 +305,11 @@ export default class StudentController {
         address,
         profileImage,
         status,
+        parent,
+        emergencyContact: {
+          name: emergencyContactName,
+          phone: emergencyContactPhone,
+        },
       });
 
       session.flash("message", {

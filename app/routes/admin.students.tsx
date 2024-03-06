@@ -623,6 +623,8 @@ export const action: ActionFunction = async ({ request }) => {
   const parent = formData.get("parent") as string;
   const profileImage = formData.get("profileImage") as string;
   const status = formData.get("status") as string;
+  const emergencyContactName = formData.get("emergencyContactName") as string;
+  const emergencyContactPhone = formData.get("emergencyContactPhone") as string;
 
   const intent = formData.get("intent") as string;
   const studentController = await new StudentController(request);
@@ -637,6 +639,9 @@ export const action: ActionFunction = async ({ request }) => {
       studentClass,
       address,
       profileImage,
+      parent,
+      emergencyContactName,
+      emergencyContactPhone,
     });
   } else if (intent == "update") {
     console.log({ _id, path });
@@ -652,6 +657,9 @@ export const action: ActionFunction = async ({ request }) => {
       address,
       profileImage,
       status,
+      parent,
+      emergencyContactName,
+      emergencyContactPhone,
     });
   } else if (intent == "delete") {
     return await studentController.deleteStudent({ _id, path });
