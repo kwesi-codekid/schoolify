@@ -106,11 +106,6 @@ const AdminStudentsManagement = () => {
           label="Gender"
         />
 
-        <CustomDatePicker
-          label="Date of Birth"
-          name="dob"
-          placeholder="Date of Birth"
-        />
         <CustomSelect
           items={classes.map((c: any) => ({
             label: c.name,
@@ -122,6 +117,7 @@ const AdminStudentsManagement = () => {
           label="Class"
         />
         <CustomInput name="address" label="Address" />
+        <CustomDatePicker placeholder="Date of Birth" name="dob" />
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
@@ -212,9 +208,15 @@ const AdminStudentsManagement = () => {
         />
 
         <CustomDatePicker
-          label="Date of Birth"
-          name="dob"
           placeholder="Date of Birth"
+          name="dob"
+          defaultValue={new Date(editRecord?.dob)
+            .toLocaleDateString("en-GB", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+            .replace(/\//g, "-")}
         />
         <CustomSelect
           items={classes.map((c: any) => ({

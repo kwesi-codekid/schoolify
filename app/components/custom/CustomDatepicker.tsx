@@ -1,31 +1,57 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Datepicker from "react-tailwindcss-datepicker";
+import { useState, useEffect } from "react";
+
 const CustomDatePicker = ({
-  id,
-  label,
   name,
   placeholder,
-  ...rest
+  defaultValue,
 }: {
-  id?: string;
-  label?: string;
   placeholder?: string;
   name: string;
+  defaultValue?: string;
 }) => {
+  const [value, setValue] = useState({
+    startDate: "",
+    endDate: "",
+  });
+
+  useEffect(() => {
+    if (defaultValue) {
+      setValue({
+        startDate: defaultValue,
+        endDate: defaultValue,
+      });
+      console.log(defaultValue, value);
+    }
+  }, [defaultValue]);
+
+  const handleValueChange = (newValue: any) => {
+    setValue(newValue);
+    console.log(newValue, value);
+  };
+
   return (
-    <div className="flex flex-col">
-      {label && (
-        <label htmlFor={id} className="text-slate-200 font-nunito">
-          {label}
-        </label>
-      )}
+    <>
       <input
-        id={id}
+        type="text"
         name={name}
-        placeholder={placeholder}
-        type="date"
-        className="rounded-xl px-3 py-4 focus:outline-none  font-nunito dark:bg-slate-700/40"
-        {...rest}
+        value={value.startDate ?? ""}
+        onChange={() => {}}
+        className="hidden"
       />
-    </div>
+
+      <Datepicker
+        asSingle={true}
+        useRange={false}
+        value={value}
+        onChange={handleValueChange}
+        placeholder={placeholder}
+        inputClassName={
+          "h-12 rounded-xl dark:!text-slate-100 text-sm focus:!ring-none focus:!outline-none w-full focus:!border-none dark:bg-slate-800 px-3 font-nunito font-bold"
+        }
+      />
+    </>
   );
 };
 
