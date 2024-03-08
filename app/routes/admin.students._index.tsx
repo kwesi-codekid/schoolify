@@ -253,6 +253,14 @@ const AdminStudentsManagement = () => {
       </div>
       {/* personal info */}
       <div className="flex flex-col gap-5">
+        <CustomComboBox
+          label="Parent"
+          items={filteredItems}
+          name="parent"
+          isLoading={comboBoxLoading}
+          setFilterText={setFilterText}
+          defaultValue={editRecord?._id}
+        />
         <CustomSelect
           items={[
             {

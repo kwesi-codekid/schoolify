@@ -27,9 +27,28 @@ export default function CustomComboBox({
         allowsCustomValue
         defaultItems={items}
         selectedKey={value}
+        defaultSelectedKey={defaultValue && defaultValue}
         onSelectionChange={setValue}
         isLoading={isLoading}
         onInputChange={setFilterText}
+        inputProps={{
+          classNames: {
+            inputWrapper: "dark:!bg-slate-800 dark:!border-slate-700/20",
+          },
+        }}
+        listboxProps={{
+          itemClasses: {
+            base: [
+              "data-[hover=true]:text-slate-100",
+              "dark:data-[hover=true]:bg-slate-700",
+            ],
+          },
+        }}
+        popoverProps={{
+          classNames: {
+            content: "dark:!bg-slate-800 dark:!border-slate-700/20",
+          },
+        }}
       >
         {(item) => (
           <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>
