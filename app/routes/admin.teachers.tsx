@@ -119,6 +119,7 @@ export const action: ActionFunction = async ({ request }) => {
   const address = formData.get("address") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
+  const profileImage = formData.get("profileImage") as string;
 
   const intent = formData.get("intent") as string;
   const studentController = await new TeacherController(request);
@@ -133,6 +134,7 @@ export const action: ActionFunction = async ({ request }) => {
       password,
       address,
       phone,
+      profileImage,
     });
   } else if (intent == "update") {
     return await studentController.updateTeacher({
@@ -144,6 +146,7 @@ export const action: ActionFunction = async ({ request }) => {
       email,
       address,
       phone,
+      profileImage,
     });
   } else if (intent == "delete") {
     return await studentController.deleteTeacher({ _id, path });

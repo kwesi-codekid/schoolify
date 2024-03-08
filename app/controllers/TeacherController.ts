@@ -333,6 +333,7 @@ export default class TeacherController {
     email,
     address,
     phone,
+    profileImage,
   }: {
     _id: string;
     path: string;
@@ -342,6 +343,7 @@ export default class TeacherController {
     phone: string;
     address: string;
     gender: string;
+    profileImage: string;
   }) => {
     const session = await getFlashSession(this.request.headers.get("Cookie"));
     // try {
@@ -354,6 +356,7 @@ export default class TeacherController {
         email,
         address,
         phone,
+        profileImage,
       }
     );
 
