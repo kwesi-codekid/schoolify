@@ -11,9 +11,12 @@ import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
 import ClassController from "~/controllers/ClassController";
 import { Input } from "@nextui-org/react";
+import TeacherController from "~/controllers/TeacherController";
 
 const AdminClassesManagement = () => {
-  const { classes, totalPages, search_term, user, page } = useLoaderData();
+  const { classes, totalPages, search_term, user, page, teachers } =
+    useLoaderData();
+  console.log(teachers);
 
   const items = [
     // {
@@ -183,7 +186,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     search_term,
   });
 
-  return { classes, totalPages, search_term, user, page };
+  const studentController = await new TeacherController(request);
+  const { teachers } = await studentController.getTeachers({
+    limit: 100,
+  });
+
+  return { classes, totalPages, search_term, user, page, teachers };
 };
 
 export const meta: MetaFunction = () => {
