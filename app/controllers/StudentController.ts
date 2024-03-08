@@ -182,7 +182,7 @@ export default class StudentController {
         class: studentClass,
         address,
         profileImage,
-        parent,
+        parent: parent || null,
         emergencyContact: {
           name: emergencyContactName,
           phone: emergencyContactPhone,

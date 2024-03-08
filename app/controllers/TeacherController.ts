@@ -164,12 +164,12 @@ export default class TeacherController {
   }
 
   public getTeachers = async ({
-    page,
+    page = 1,
     search_term,
     limit = 10,
   }: {
-    page: number;
-    search_term: string;
+    page?: number;
+    search_term?: string;
     limit?: number;
   }) => {
     const skipCount = (page - 1) * limit; // Calculate the number of documents to skip
