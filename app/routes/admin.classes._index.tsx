@@ -1,33 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomTable from "~/components/custom/CustomTable";
 import CustomInput from "~/components/custom/CustomInput";
 import CustomSelect from "~/components/custom/CustomSelect";
-import CustomDatePicker from "~/components/custom/CustomDatepicker";
 
 import AdminLayout from "~/layouts/AdminLayout";
 import { useState } from "react";
 import { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
-import AdminController from "~/controllers/AdminController";
-import StudentController from "~/controllers/StudentController";
 import { useLoaderData } from "@remix-run/react";
 import ClassController from "~/controllers/ClassController";
-import { Input } from "@nextui-org/react";
+import { Avatar, Input, Select, SelectItem } from "@nextui-org/react";
 import TeacherController from "~/controllers/TeacherController";
 
 const AdminClassesManagement = () => {
   const { classes, totalPages, search_term, user, page, teachers } =
-    useLoaderData();
-  console.log(teachers);
+    useLoaderData<any>();
 
-  const items = [
-    // {
-    //   id: 1,
-    //   name: "John Doe",
-    //   email: "jdoe@gmail.com",
-    //   phone: "1234567890",
-    //   class: "Class 1",
-    //   section: "A",
-    // },
-  ];
+  const teacherItems = teachers.map((teacher: any) => ({
+    label: `${teacher.firstName} ${teacher.lastName}`,
+    value: teacher._id,
+    id: teacher._id,
+    chipColor: "primary",
+  }));
 
   const columns = [
     {
@@ -51,24 +44,65 @@ const AdminClassesManagement = () => {
   const createClassFormItems = (
     <div className="flex flex-col gap-5">
       <CustomInput name="className" label="Class Name" />
-      <CustomSelect
-        items={[
-          {
-            label: "Male",
-            value: "male",
-            id: "male",
-            chipColor: "primary",
-          },
-          {
-            label: "Female",
-            value: "female",
-            id: "female",
-            chipColor: "secondary",
-          },
-        ]}
+      <Select
+        items={teachers}
+        label="Assigned to"
         name="classTeacher"
-        label="Class Teacher"
-      />
+        placeholder="Select a teacher"
+        size="lg"
+        className="font-nunito"
+        classNames={{
+          trigger: "dark:!bg-slate-800 dark:!border-slate-700/20",
+          popoverContent: "dark:!bg-slate-800 dark:!border-slate-700/20",
+          label: "font-nunito font-bold mb-2",
+        }}
+        listboxProps={{
+          itemClasses: {
+            base: [
+              "rounded-md",
+              "dark:hover:!bg-slate-700",
+              "dark:!text-slate-200",
+            ],
+          },
+        }}
+        renderValue={(items: any) => {
+          return items.map((item: any) => (
+            <div key={item._id} className="flex items-center gap-2">
+              <Avatar
+                alt={item.data.firstName}
+                className="flex-shrink-0"
+                size="sm"
+                src={item.data.profileImage}
+              />
+              <div className="flex flex-col">
+                <span>{item.data.firstName + item.data.lastName}</span>
+                <span className="text-default-500 text-tiny">
+                  {item.data.email}
+                </span>
+              </div>
+            </div>
+          ));
+        }}
+      >
+        {(teacher: any) => (
+          <SelectItem key={teacher._id} textValue={teacher._id}>
+            <div className="flex gap-2 items-center">
+              <Avatar
+                alt={teacher.firstName}
+                className="flex-shrink-0"
+                size="sm"
+                src={teacher.profileImage}
+              />
+              <div className="flex flex-col">
+                <span className="text-small">{`${teacher.firstName} ${teacher.lastName}`}</span>
+                <span className="text-tiny text-default-400">
+                  {teacher.email}
+                </span>
+              </div>
+            </div>
+          </SelectItem>
+        )}
+      </Select>
       <CustomInput name="description" label="Description" />
     </div>
   );

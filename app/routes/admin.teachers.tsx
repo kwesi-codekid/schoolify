@@ -9,6 +9,7 @@ import AdminController from "~/controllers/AdminController";
 import { useLoaderData } from "@remix-run/react";
 import TeacherController from "~/controllers/TeacherController";
 import { AdminInterface, TeacherInterface } from "~/types";
+import UploadFileInput from "~/components/custom/upload-file-input";
 
 const AdminTeachersManagement = () => {
   const { teachers, totalPages, search_term, user, page } = useLoaderData<{
@@ -80,6 +81,7 @@ const AdminTeachersManagement = () => {
         <CustomInput name="address" label="Address" />
         <CustomInput name="password" label="Password" />
         <CustomInput name="confirmPassword" label="Confirm Password" />
+        <UploadFileInput name="profileImage" />
       </div>
     </div>
   );
